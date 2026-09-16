@@ -1,0 +1,12 @@
+---
+description: Project-wide agent rules for every Cursor session
+alwaysApply: true
+---
+
+# Always-on Cursor rules
+
+Keep this short. Shared facts belong in `AGENTS.md`.
+
+- Follow `AGENTS.md` for commands, layout, and style.
+- Match existing file patterns before introducing new ones.
+- Do not add comments that only narrate the code.

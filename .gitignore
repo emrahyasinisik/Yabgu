@@ -1,0 +1,13 @@
+.DS_Store
+Thumbs.db
+*.log
+
+# Personal / machine-local agent files — do not commit
+CLAUDE.local.md
+AGENTS.override.md
+*.local.md
+.claude/settings.local.json
+.cursor/mcp.json
+.env
+.env.*
+!.env.example
