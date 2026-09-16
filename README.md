@@ -1,12 +1,28 @@
-# agent-md-kit
+# yabgu
 
-Yapay zeka kodlama araçları için **hangi markdown dosyasının nerede kullanılacağını** toplayan bir katalog ve şablon kiti.
+**Yabgu**, Göktürk unvanıdır: kağanın yanında işi yürüten yönetici. Bu repoda model kağan değil; kısa talimat dosyaları yabgudur.
 
-Farklı araçlar farklı dosya adları okur. Ortak kural:
+**Amaç:** Cursor, Claude, ChatGPT/Codex ve benzeri ajanları **daha doğru**, **daha etkili** ve **daha az token** ile kullanmak.
 
-1. Paylaşılan gerçeği `AGENTS.md` içine yaz.
-2. Araç kendi dosyasını okumuyorsa, o dosyadan `AGENTS.md`'ye köprü kur.
-3. Sadece o araca özel davranışı native dosyaya koy.
+Bunu model değiştirerek değil, her turda yüklenen talimatı düzeltmekle yaparız:
+
+- Doğru dosya, doğru araçta (Claude `CLAUDE.md`, Cursor `AGENTS.md` + rules, Codex `AGENTS.md`)
+- Ortak kural **bir kez** yazılır, kopyalanmaz
+- Kısa tutulur; uzun prosedür skill’e gider, her sohbete gömülmez
+- Çelişen / ölü kurallar silinir — yanlış kural hem hata üretir hem token yakar
+
+## Neden token düşer, doğruluk artar
+
+Ajan her mesajda senin anlattığın stack’i, test komutunu ve “yapma” listesini yeniden keşfetmez. Keşif turları (yanlış klasör, yanlış paket yöneticisi, aynı kuralı 4 dosyada çelişik okumak) en pahalı kısımdır.
+
+| Yapılan hata | Sonuç |
+| --- | --- |
+| Aynı metni `CLAUDE.md` + `AGENTS.md` + Copilot’a yapıştırmak | Token × araç sayısı, çelişince yanlış kod |
+| 800 satırlık her-oturum kuralı | Her turda bağlam şişer, kural da uyulmaz |
+| Hiç dosya olmaması | Ajan her seferinde repo’yu tarar, uydurur |
+| ChatGPT web’den repo md beklemek | Dosya yüklenmez; talimat ayara yazılmalı |
+
+Doğru düzen: ince `AGENTS.md` + ince adaptör. Ayrıntı: [docs/shared-source-of-truth.md](docs/shared-source-of-truth.md)
 
 ## Hızlı cevap
 
@@ -23,6 +39,17 @@ Farklı araçlar farklı dosya adları okur. Ortak kural:
 
 Detaylı matris: [docs/matrix.md](docs/matrix.md)
 
+## Nasıl kullanılır (bugün)
+
+Kurulum yok. Kendi projenize şablon kopyalarsınız.
+
+1. [`templates/AGENTS.md`](templates/AGENTS.md) → repo kökü. Komutlar, stil, “yapma” listesi. Kısa tut.
+2. Claude kullanıyorsan [`templates/CLAUDE.md`](templates/CLAUDE.md) → kök. İlk satır `@AGENTS.md`.
+3. Cursor’da dosya-tipi kuralı varsa [`templates/cursor/`](templates/cursor/) → `.cursor/rules/`.
+4. Copilot varsa [`templates/copilot/copilot-instructions.md`](templates/copilot/copilot-instructions.md) → `.github/copilot-instructions.md` (özet; asıl metin `AGENTS.md`).
+
+Sonraki sohbetlerde ajan bu dosyaları kendisi yükler. Aynı şeyi her prompt’ta tekrarlamazsınız.
+
 ## Önerilen repo düzeni
 
 Tek kaynak + ince adaptörler:
@@ -31,19 +58,17 @@ Tek kaynak + ince adaptörler:
 your-project/
 ├── AGENTS.md                          # herkes için ortak talimat
 ├── CLAUDE.md                          # @AGENTS.md + Claude'a özel notlar
-├── GEMINI.md                          # @AGENTS.md veya kısa özet (Gemini import etmez)
+├── GEMINI.md                          # kısa Gemini notu veya ayarla AGENTS.md
 ├── .cursor/rules/                     # Cursor'a özel scoped kurallar
 │   └── typescript.mdc
-├── .cursor/skills/review-pr/SKILL.md  # görev bazlı skill
+├── .cursor/skills/review-pr/SKILL.md  # görev bazlı skill (her tura girmez)
 ├── .claude/rules/                     # Claude path-scoped kurallar
 ├── .claude/skills/                    # Claude skill'leri
 └── .github/
-    ├── copilot-instructions.md        # Copilot repo geneli
+    ├── copilot-instructions.md        # Copilot özeti
     └── instructions/
-        └── frontend.instructions.md   # Copilot path-scoped
+        └── frontend.instructions.md
 ```
-
-Adım adım kurulum: [docs/shared-source-of-truth.md](docs/shared-source-of-truth.md)
 
 ## Araç rehberleri
 
@@ -57,8 +82,6 @@ Adım adım kurulum: [docs/shared-source-of-truth.md](docs/shared-source-of-trut
 
 ## Şablonlar
 
-Kopyala-yapıştır başlangıç dosyaları [`templates/`](templates/) altında.
-
 | Şablon | Ne için |
 | --- | --- |
 | [`templates/AGENTS.md`](templates/AGENTS.md) | Ortak kaynak |
@@ -66,7 +89,7 @@ Kopyala-yapıştır başlangıç dosyaları [`templates/`](templates/) altında.
 | [`templates/GEMINI.md`](templates/GEMINI.md) | Gemini CLI |
 | [`templates/cursor/always-apply.mdc`](templates/cursor/always-apply.mdc) | Cursor her oturum kuralı |
 | [`templates/cursor/glob-rule.mdc`](templates/cursor/glob-rule.mdc) | Cursor dosya deseni kuralı |
-| [`templates/copilot/copilot-instructions.md`](templates/copilot/copilot-instructions.md) | Copilot repo kuralı |
+| [`templates/copilot/copilot-instructions.md`](templates/copilot/copilot-instructions.md) | Copilot repo özeti |
 | [`templates/copilot/path-specific.instructions.md`](templates/copilot/path-specific.instructions.md) | Copilot glob kuralı |
 | [`templates/claude/testing.md`](templates/claude/testing.md) | `.claude/rules/` örneği |
 | [`templates/skills/SKILL.md`](templates/skills/SKILL.md) | Agent Skill |
@@ -77,13 +100,19 @@ Kopyala-yapıştır başlangıç dosyaları [`templates/`](templates/) altında.
 | İçerik | Dosya |
 | --- | --- |
 | Build / test / stil / mimari (her araç) | `AGENTS.md` |
-| Claude `@` import, plan mode, hook notları | `CLAUDE.md` |
-| Cursor glob / alwaysApply / description | `.cursor/rules/*.mdc` |
-| Görev bazlı uzun prosedür | `SKILL.md` (Cursor veya Claude skills) |
+| Claude `@` import, plan mode | `CLAUDE.md` |
+| Cursor glob / alwaysApply | `.cursor/rules/*.mdc` |
+| Görev bazlı uzun prosedür | `SKILL.md` (her tura girmez → token tasarrufu) |
 | Kişisel, commit edilmeyecek not | `CLAUDE.local.md` veya `AGENTS.override.md` |
 | Copilot path-specific | `.github/instructions/*.instructions.md` |
 
-`AGENTS.md` kısa tut. 200 satırı aşınca konuları kural veya skill dosyalarına böl.
+Hedef: `AGENTS.md` ~200 satırın altında. Şişerse kural veya skill’e böl.
+
+## Bu repo ne değil
+
+- Model seçici / Auto router değil (onu Cursor ve Claude yapar)
+- ChatGPT web’e gizli dosya enjekte etmez
+- Kurunca sihirli tasarruf garantisi vermez; tasarruf, tekrar keşif ve kopyalanmış kuralların kesilmesinden gelir
 
 ## Kaynaklar
 

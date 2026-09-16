@@ -1,6 +1,6 @@
 # Tek kaynak: AGENTS.md + adaptörler
 
-Birden fazla ajan kullanıyorsan aynı kuralları üç dosyada kopyalama. Bir `AGENTS.md` yaz, diğer araçları ona bağla.
+Amaç daha az token ve daha doğru ajan: aynı kuralı üç dosyaya yapıştırma. Bir `AGENTS.md` yaz, diğer araçları ona bağla. Her kopya hem bağlamı şişirir hem çelişince yanlış kod üretir.
 
 ## 1. Ortak dosyayı yaz
 
