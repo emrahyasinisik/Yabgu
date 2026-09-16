@@ -1,8 +1,8 @@
 # Host research (official docs)
 
-Kaynak: her satırda resmi URL. Tahmin yok. MCP henüz yazılmıyor; kit bittikten sonra bu tabloya göre kurulacak.
+Kaynak: her satırda resmi URL. Tahmin yok. MCP kurulumu host başına farklı — `yabgu_host_setup` snippet üretir.
 
-Yabgu konuşma stiline karışmaz. MCP (sonra) native dosya **üretir**; her turda yükleme host’undur.
+Yabgu konuşma stiline karışmaz. MCP native dosya **önerir**; `apply` yalnızca onay sonrası yazar. Her turda yükleme host’undur.
 
 ## Native talimat (bugünkü katalog)
 
@@ -41,7 +41,9 @@ Ortak: **stdio** (yerel `command` + `args`) her yerde var. Yabgu’nun resmi kur
 - Kullanıcı: `~/.claude.json`; local varsayılan
 - HTTP önerilen remote; SSE ve `ws` de var. `url` varsa `type` zorunlu (`http` / `sse` / `ws`); yoksa stdio sanılır ve atlanır
 - Stdio süreçte `CLAUDE_PROJECT_DIR` = proje kökü
+- `roots/list` + `notifications/roots/list_changed` = oturumun açıldığı dizin + `--add-dir` / additionalDirectories (v2.1.203+)
 - Server `instructions` + tool description: **2 KB’de kesilir**; tool search açıkken instructions “ne zaman bu tool’ları ara” içindir, ses/ton için değil
+- Kritik metni başa koy; tool search varsayılan açık — ilk turda çoğu host’ta yalnızca tool **isimleri** + instructions yüklenir
 - Reserved isimler: `workspace`, `claude-in-chrome`, … — `yabgu` serbest
 - Plugin MCP: plugin kökünde `.mcp.json`
 
@@ -52,6 +54,9 @@ Ortak: **stdio** (yerel `command` + `args`) her yerde var. Yabgu’nun resmi kur
 - Proje: güvenilen repo’da `.codex/config.toml`
 - CLI: `codex mcp add <name> -- <command>`
 - TOML: `[mcp_servers.yabgu]` + `command` / `args` veya `url` (streamable HTTP)
+- `instructions` alanı çapraz-tool rehber; **ilk 512 karakter** kendi başına yeterli olsun ([Codex MCP](https://developers.openai.com/codex/mcp))
+- `startup_timeout_sec` varsayılan **10s** — `npx -y` soğuk açılışta yetmeyebilir
+- `default_tools_approval_mode = "writes"`: salt okuma tool’ları serbest, yazanlar onay ister
 - `chatgpt.com` sohbeti bu config’i okumaz
 
 ### GitHub Copilot — iki yüzey
@@ -75,6 +80,7 @@ Ortak: **stdio** (yerel `command` + `args`) her yerde var. Yabgu’nun resmi kur
 - Docs: [MCP server](https://google-gemini.github.io/gemini-cli/docs/tools/mcp-server.html)
 - `settings.json` içinde `mcpServers` (user `~/.gemini/` veya proje `.gemini/`)
 - Stdio: `command`, `args`, `cwd`, `env`
+- `timeout` (ms, tool çağrısı), `trust` (false = onay)
 - `gemini mcp add` / `/mcp`
 - Prompt’lar slash command olabilir
 
@@ -85,6 +91,7 @@ Ortak: **stdio** (yerel `command` + `args`) her yerde var. Yabgu’nun resmi kur
 - Proje: `.grok/config.toml` — sadece MCP / plugin / permission
 - `[mcp_servers.yabgu]` `command`/`args`/`env` veya `url`/`headers`
 - `${VAR}` açılımı; `grok mcp add --scope project`; `grok inspect`
+- `startup_timeout_sec` (varsayılan 30) — `npx` ilk indirmede yükselt
 - **Ayrıca** `~/.claude.json`, `.cursor/mcp.json`, proje `.mcp.json` okur (kapatılabilir)
 
 ### Windsurf (Cascade)
@@ -116,7 +123,10 @@ Ortak: **stdio** (yerel `command` + `args`) her yerde var. Yabgu’nun resmi kur
 | Copilot cloud | `tools` allowlist + `readOnlyHint` + `COPILOT_MCP_` |
 | Cursor | Onay + `${workspaceFolder}`; marketplace ayrı kanal |
 | Grok | Kendi toml + Claude/Cursor config’ini de yutabilir |
-| Instructions alanı | Claude’da 2 KB, “ne zaman tool ara”; ton yazma |
+| Instructions alanı | Claude 2 KB + “ne zaman tool ara”; Codex ilk 512 karakter |
+| Workspace kökü | MCP `roots/list`; Claude `CLAUDE_PROJECT_DIR`; yoksa cwd |
+| npx soğuk start | Codex `startup_timeout_sec`; Grok aynı alan |
+| Yazma onayı | Cursor elicitation UI; yoksa `confirmed=true`; Copilot cloud → `YABGU_READ_ONLY=1` + allowlist’siz apply |
 | ChatGPT web | Hedef değil; Codex/desktop hedef |
 
 ## Dışarıda (bilinçli)

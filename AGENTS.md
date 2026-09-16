@@ -4,18 +4,30 @@ Yabgu is an Old Turkic title: the ruler who carries out the khagan's work. This 
 
 Purpose: better project context and fewer tokens. Do not control how the model speaks to the user.
 
-Finish the catalog and templates first. An MCP comes after that, designed from each popular host's official MCP docs (Cursor, Claude Code, Codex, Copilot, Gemini, Grok). Do not implement the MCP until the kit is done.
+Catalog + templates remain the product core. The MCP is local stdio: guide content, scan/plan, apply only after explicit approval, and measure before/after. Designed from host MCP docs (Cursor, Claude Code, Codex, Copilot, Gemini, Grok).
 
 ## Commands
 
-There is no build yet. Edit markdown, then commit.
+```bash
+npm install
+npm run build
+npm test
+npm run typecheck
+npx yabgu mcp
+npx yabgu measure <path>
+```
 
 ## Layout
 
 - `README.md` — purpose, file matrix, how to copy templates
-- `docs/` — product rule, writing guide, host/MCP research, comparison matrix
+- `docs/` — product rule, writing guide, host/MCP research, comparison matrix, measure protocol
 - `tools/` — per-product file lists
 - `templates/` — copy-paste starter files
+- `fixtures/` — tiny repos for unit tests
+- `examples/test-project/` — consumer-style real-test app (acme-dashboard)
+- `scripts/` — example:setup / example:reset
+- `src/` — MCP + scan/plan/apply/measure
+- `test/` — node:test suites
 
 ## Style
 
@@ -27,10 +39,10 @@ There is no build yet. Edit markdown, then commit.
 
 ## Do not
 
-- Do not implement the MCP until the catalog/templates are done and the user asks to build it.
-- When the MCP exists: local stdio only by default. Do not send repo contents, paths, or telemetry to any yabgu-operated server. The kit author must never see a user’s project.
+- Do not send repo contents, paths, or telemetry to any yabgu-operated server. Local stdio only by default.
+- Do not overwrite non-empty instruction files unless the user explicitly asks (`overwrite`).
 - Do not add communication, tone, or “how to talk to the user” rules. That is out of scope.
 - Do not duplicate the same long rule set in every adapter file (that wastes tokens and causes conflicts).
 - Do not put multi-step procedures in always-on files; use skills.
 - Do not commit `CLAUDE.local.md` or `AGENTS.override.md`.
-- Do not claim a numeric token savings figure without a measured before/after.
+- Do not claim a numeric token savings figure without a measured before/after ([docs/measure.md](docs/measure.md)).

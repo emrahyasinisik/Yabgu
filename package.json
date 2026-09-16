@@ -1,0 +1,54 @@
+{
+  "name": "yabgu",
+  "version": "0.1.0",
+  "description": "Short instruction files for coding agents — catalog, templates, and a guide-only MCP harness",
+  "type": "module",
+  "bin": {
+    "yabgu": "./dist/cli.js"
+  },
+  "files": [
+    "dist/",
+    "docs/",
+    "templates/",
+    "tools/",
+    "fixtures/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js mcp",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/**/*.test.ts",
+    "measure": "tsx src/cli.ts measure",
+    "example:setup": "tsx scripts/example-setup.ts",
+    "example:reset": "tsx scripts/example-reset.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emrahyasinisik/yabgu"
+  },
+  "keywords": [
+    "agents",
+    "mcp",
+    "coding-agent",
+    "cursor",
+    "claude",
+    "codex",
+    "copilot",
+    "gemini",
+    "instruction-files"
+  ]
+}

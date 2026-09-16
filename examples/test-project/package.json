@@ -1,0 +1,34 @@
+{
+  "name": "acme-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "server": "tsx src/server.ts",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "echo \"prisma migrate (schema not checked in yet)\"",
+    "db:seed": "echo \"seed stub\""
+  },
+  "dependencies": {
+    "@prisma/client": "^6.0.0",
+    "express": "^5.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

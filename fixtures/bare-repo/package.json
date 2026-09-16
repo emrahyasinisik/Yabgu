@@ -1,0 +1,14 @@
+{
+  "name": "bare-fixture",
+  "private": true,
+  "scripts": {
+    "test": "echo ok",
+    "lint": "echo lint"
+  },
+  "dependencies": {
+    "express": "^5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

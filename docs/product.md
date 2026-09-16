@@ -6,11 +6,13 @@ Yabgu: daha doğru proje bağlamı, daha az token.
 
 ## Sıra
 
-1. **Şimdi:** katalog + şablonlar bitsin (hangi ajan hangi native dosyayı okur, nasıl yazılır).
-2. **Sonra:** MCP. Kurulum [docs/hosts.md](hosts.md) içindeki **resmi** Cursor / Claude / Codex / Copilot / Gemini / Grok (ve diğer) şemalarına göre — tahmin yok.
-3. MCP ilk sorguda projeyi tarar, yalnızca gerekçeli `AGENTS.md` / adaptör / `.mdc` / skill yazar, asıl işe döner. Konuşma stili ve model seçimi yok.
+1. **Katalog + şablonlar** — hangi ajan hangi native dosyayı okur, nasıl yazılır.
+2. **MCP (yerel stdio)** — doküman/şablon sunar; `scan` → `plan` → kullanıcı onayı → `apply`; `measure` ile before/after.
+3. Kurulum [docs/hosts.md](hosts.md) resmi şemalarına göre — host başına snippet (`yabgu_host_setup`). Tahmin yok.
 
-MCP, native dosyaların yerini almaz. Dosyaları **üretir**; her turda yükleme yine host’undur.
+MCP, native dosyaların yerini almaz. Dosyaları **önerir / onayla yazar**; her turda yükleme yine host’undur.
+
+Ölçüm protokolü: [docs/measure.md](measure.md). Token tasarrufu iddiası ancak ayrı before/after ölçümle.
 
 ## Gizlilik (MCP)
 
@@ -22,9 +24,11 @@ Bu yüzden MCP:
 - **Telefon yok:** repo içeriği, yol, dosya listesi, telemetry, “ilk sorgu raporu” yabgu’ya gönderilmez.
 - **SaaS analiz yok:** “projeyi bize yükle, AGENTS.md üretelim” modeli yok. Tarama kullanıcının disk’inde.
 - **Log:** varsa kullanıcı makinesinde; uzak log yok.
+- **Yazma:** yalnızca `yabgu_apply` (host form elicitation UI onayı varsa o; yoksa `confirmed=true`) + isteğe bağlı `overwrite`. Hedef yalnızca native talimat yolları (`AGENTS.md`, ince adaptör, skill) — rastgele kaynak dosyası değil.
+- **`YABGU_READ_ONLY=1`:** `yabgu_apply` kaydedilmez. Copilot cloud / salt-okuma kurulumları için.
 
 Host’un (Cursor, GitHub, Claude) zaten açık olan workspace’i ayrı konu — o, yabgu yazarının erişimi değil.
 
-Copilot **cloud** agent MCP’si GitHub altyapısında çalışır. Orada da yabgu bir yabgu-backend’e veri göndermez; `tools` allowlist + mümkünse salt okuma. Kullanıcı cloud agent kullanıyorsa repo zaten GitHub’dadır — yine yabgu yazarının kopyası oluşmaz.
+Copilot **cloud** agent MCP’si GitHub altyapısında çalışır. Orada da yabgu bir yabgu-backend’e veri göndermez; `tools` allowlist + salt okuma tool’larında `readOnlyHint` + `YABGU_READ_ONLY=1`. `yabgu_apply` allowlist’e bilinçli eklenmemeli.
 
 Uzak HTTP MCP ancak kullanıcı kendi sunucusunu gösterirse. Yabgu’nun resmi kurulumu uzak endpoint vermez.
