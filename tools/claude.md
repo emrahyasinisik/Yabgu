@@ -65,6 +65,9 @@ Claude kendi düzeltmelerinden not biriktirir. Sen yazmazsın. Zorunlu "her zama
 
 Oturumda `/context` → Memory files listesinde `CLAUDE.md` görünmeli.
 
+Yazım (200 satır, somut kural, hook = kilit): [how-to-write.md](../docs/how-to-write.md)
+
 ## Kaynak
 
 - https://code.claude.com/docs/en/memory
+- https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more

@@ -6,19 +6,21 @@ Amaç daha az token ve daha doğru ajan: aynı kuralı üç dosyaya yapıştırm
 
 Kökte `AGENTS.md` oluştur. Şablon: [`templates/AGENTS.md`](../templates/AGENTS.md)
 
-İçine koy:
+İçine koy (kodun söylemediği şeyler):
 
 - Proje özeti (2–4 cümle)
-- Kurulum / çalıştırma / test komutları
-- Stil ve mimari kuralları
-- "Asla yapma" listesi
+- Kurulum / çalıştırma / test komutları — tam, çalıştırılabilir
+- Stil ve mimari: somut, “yapma” listesi
 - PR / commit beklentileri
 
 İçine koyma:
 
 - Uzun prosedürler → `SKILL.md`
+- Lint’in zaten yakaladığı format
 - Tek bir araca özel UI/mod notları → native dosya
 - Kişisel sandbox URL'leri → `*.local.md` / `AGENTS.override.md`
+
+Yazım: her satır bir hatayı önlemeli; kalkınca bir şey bozulmuyorsa sil. Ayrıntı: [how-to-write.md](how-to-write.md)
 
 ## 2. Claude Code
 

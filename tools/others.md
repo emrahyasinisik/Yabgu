@@ -25,6 +25,12 @@ read: AGENTS.md
 
 Eski alışkanlık: `CONVENTIONS.md`. Yeni projede `AGENTS.md`.
 
+## Grok Build
+
+Kök `AGENTS.md`. Skills, hooks, MCP. Büyük işte plan mode. Yüklü talimatı görmek için `grok inspect`.
+
+Yazım diğer `AGENTS.md` okuyanlarla aynı: kısa, komut, yasak. [how-to-write.md](../docs/how-to-write.md)
+
 ## Amp, Factory, Jules, Goose, OpenCode, Zed, Warp, Kilo
 
 Bunlar [agents.md](https://agents.md/) ekosistemine dahil. Kök `AGENTS.md` birincil dosyadır.

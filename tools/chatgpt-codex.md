@@ -58,6 +58,8 @@ Talimat GPT'nin Instructions alanında durur. İsteğe bağlı Knowledge olarak 
 
 Şablon: [`templates/AGENTS.md`](../templates/AGENTS.md)
 
+Codex birleşik talimatı ~32 KiB’de keser. Kritik kuralı dosyanın üstüne ve iç içe klasöre koy. Ayrıntı: [how-to-write.md](../docs/how-to-write.md)
+
 ## Kaynak
 
 - https://developers.openai.com/codex/guides/agents-md

@@ -1,6 +1,6 @@
-.DS_Store
-Thumbs.db
-*.log
+node_modules/
+dist/
+*.tsbuildinfo
 
 # Personal / machine-local agent files — do not commit
 CLAUDE.local.md

@@ -44,6 +44,8 @@ Gemini'ye özel 10–20 satır yaz; ortak kuralları `AGENTS.md`'de bırak ve ek
 
 Şablon: [`templates/GEMINI.md`](../templates/GEMINI.md)
 
+Negatif kural yaz (“Do not…”). `@import` token düşürmez; düşürmek için sil veya alt klasöre taşı. [how-to-write.md](../docs/how-to-write.md)
+
 ## Kaynak
 
 - https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/gemini-md.md

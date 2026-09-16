@@ -10,15 +10,15 @@ Bu tablo "hangi araç hangi `.md` dosyasını otomatik yükler?" sorusuna cevap 
 
 ## Proje kökü dosyaları
 
-| Dosya | Cursor | Claude Code | Codex / ChatGPT | Copilot | Gemini CLI | Windsurf | Cline |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `AGENTS.md` | Evet | Köprü (`@AGENTS.md` veya symlink) | Evet | Evet | Ayar (`context.fileName`) | Evet (çoğu sürüm) | Ayar / evet (sürüme bak) |
-| `AGENTS.override.md` | Hayır | Hayır | Evet (aynı dizinde `AGENTS.md`'den önce) | Hayır | Hayır | Hayır | Hayır |
-| `CLAUDE.md` | Hayır | Evet | Ayar (`project_doc_fallback_filenames`) | Evet (bazı yüzeyler) | Hayır | Hayır | Hayır |
-| `CLAUDE.local.md` | Hayır | Evet (git'e koyma) | Hayır | Hayır | Hayır | Hayır | Hayır |
-| `GEMINI.md` | Hayır | Hayır | Hayır | Evet (bazı yüzeyler) | Evet | Hayır | Hayır |
-| `.cursorrules` | Eski | `/init` okuyabilir | Hayır | Hayır | Hayır | Hayır | Eski fallback |
-| `.windsurfrules` | Hayır | `/init` okuyabilir | Hayır | Hayır | Hayır | Eski | Eski fallback |
+| Dosya | Cursor | Claude Code | Codex | Copilot | Gemini CLI | Grok Build | Windsurf | Cline |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `AGENTS.md` | Evet | Köprü (`@AGENTS.md`) | Evet | Evet | Ayar | Evet | Evet | Ayar / evet |
+| `AGENTS.override.md` | Hayır | Hayır | Evet | Hayır | Hayır | Hayır | Hayır | Hayır |
+| `CLAUDE.md` | Hayır | Evet | Ayar | Evet (bazı yüzeyler) | Hayır | Hayır | Hayır | Hayır |
+| `CLAUDE.local.md` | Hayır | Evet (gitignore) | Hayır | Hayır | Hayır | Hayır | Hayır | Hayır |
+| `GEMINI.md` | Hayır | Hayır | Hayır | Evet (bazı yüzeyler) | Evet | Hayır | Hayır | Hayır |
+| `.cursorrules` | Eski | `/init` okuyabilir | Hayır | Hayır | Hayır | Hayır | Hayır | Eski fallback |
+| `.windsurfrules` | Hayır | `/init` okuyabilir | Hayır | Hayır | Hayır | Hayır | Eski | Eski fallback |
 
 ## Native kural dizinleri
 
@@ -34,6 +34,10 @@ Bu tablo "hangi araç hangi `.md` dosyasını otomatik yükler?" sorusuna cevap 
 | `.windsurf/rules/*.md` | Windsurf | Kural ayarına göre |
 | `.clinerules` veya `.clinerules/` | Cline / Roo | Proje kuralları |
 | `.devin/rules/` | Devin | `/init` (Claude) bunu da okuyabilir |
+| `GEMINI.md` / `.gemini/` | Gemini CLI | Proje + `~/.gemini/GEMINI.md` |
+| `opencode.json` + `AGENTS.md` | OpenCode | Native config + talimat |
+
+MCP config dosyaları (kurulum sonra; şema tahmini yok): [hosts.md](hosts.md)
 
 ## Kullanıcı (global) dosyaları
 
@@ -44,6 +48,8 @@ Bu tablo "hangi araç hangi `.md` dosyasını otomatik yükler?" sorusuna cevap 
 | `~/.codex/AGENTS.md` veya `AGENTS.override.md` | Codex |
 | `~/.copilot/copilot-instructions.md` | Copilot CLI |
 | `~/.gemini/GEMINI.md` | Gemini CLI |
+| `~/.grok/config.toml` | Grok Build (MCP / plugin; talimat değil) |
+| `~/.codex/config.toml` | Codex (MCP; talimat `AGENTS.md`) |
 
 ## ChatGPT web
 

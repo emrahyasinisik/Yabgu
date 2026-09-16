@@ -78,6 +78,8 @@ Proje skill: `.cursor/skills/<ad>/SKILL.md`
 - 40 adımlık release checklist → skill
 - API anahtarı, local URL → User Rules veya gitignore'lı dosya
 
+Ortak yazım: [how-to-write.md](../docs/how-to-write.md)
+
 ## Kaynak
 
 - https://cursor.com/docs/rules

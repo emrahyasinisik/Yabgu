@@ -16,3 +16,5 @@ Copy these into a real project. Do not treat this kit as an app.
 | `windsurf/style.md` | `.windsurf/rules/style.md` |
 
 Shared-source steps: [docs/shared-source-of-truth.md](../docs/shared-source-of-truth.md)
+
+How to write the files (vendor-backed): [docs/how-to-write.md](../docs/how-to-write.md)

@@ -49,6 +49,8 @@ Copilot CLI, `AGENTS.md` / `CLAUDE.md` içinde `@relative/path` import genişlet
 
 GitHub Copilot ≠ ChatGPT web. Copilot dosyaları GitHub/VS Code/CLI içindir. ChatGPT web bunları okumaz.
 
+Kısa, çelişkisiz cümle yaz. Uzun ortak metni kopyalama. [how-to-write.md](../docs/how-to-write.md)
+
 ## Kaynak
 
 - https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions
