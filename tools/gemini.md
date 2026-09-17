@@ -42,7 +42,7 @@ Gemini `@AGENTS.md` import'unu Claude gibi genişletmez. İki yol:
 
 Gemini'ye özel 10–20 satır yaz; ortak kuralları `AGENTS.md`'de bırak ve ekip üyelerine A yolunu söyle.
 
-Şablon: [`templates/GEMINI.md`](../templates/GEMINI.md)
+Şablonlar: [`templates/GEMINI.md`](../templates/GEMINI.md) · [`templates/gemini/settings.json`](../templates/gemini/settings.json)
 
 Negatif kural yaz (“Do not…”). `@import` token düşürmez; düşürmek için sil veya alt klasöre taşı. [how-to-write.md](../docs/how-to-write.md)
 

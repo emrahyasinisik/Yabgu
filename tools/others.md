@@ -1,19 +1,23 @@
 # Cline, Roo ve diğer ajanlar
 
+Grok Build ayrı rehber: [`tools/grok.md`](grok.md).
+
 ## Cline / Roo Code
 
 | Dosya | Not |
 | --- | --- |
-| `.clinerules` | Tek dosya |
-| `.clinerules/` | Klasör, birden fazla kural |
-| `AGENTS.md` | Destek ekleniyor / sürüme bak |
-| `.cursorrules`, `.windsurfrules` | Bazı sürümler fallback okur |
+| `.clinerules` | Tek dosya (şablon: [`templates/cline/clinerules.md`](../templates/cline/clinerules.md)) |
+| `.clinerules/*.md` | Klasör; birden fazla kural |
+| `AGENTS.md` | Destek ekleniyor / sürüme bak — paylaşılmış kaynak yine burada |
+| `.cursorrules`, `.windsurfrules` | Bazı sürümler fallback okur; yeni projede yazma |
 
-Yeni paylaşılan kurulumda kök `AGENTS.md` yaz; Cline native kurallarına sadece Cline'a özel not koy.
+Kök `AGENTS.md` yaz; `.clinerules` içine yalnızca Cline/Roo’ya özel not koy. Aynı uzun metni kopyalama.
+
+MCP: `yabgu_host_setup` host=`cline` · [hosts.md](../docs/hosts.md)
 
 ## Devin
 
-`.devin/rules/` — Claude `/init` bunu da tarayabilir.
+`.devin/rules/` — Cascade / Devin Desktop workspace kuralları (eski `.windsurf/rules/` fallback). Claude `/init` bunu da tarayabilir. Windsurf rehberi: [`tools/windsurf.md`](windsurf.md).
 
 ## Aider
 
@@ -25,13 +29,11 @@ read: AGENTS.md
 
 Eski alışkanlık: `CONVENTIONS.md`. Yeni projede `AGENTS.md`.
 
-## Grok Build
+## OpenCode
 
-Kök `AGENTS.md`. Skills, hooks, MCP. Büyük işte plan mode. Yüklü talimatı görmek için `grok inspect`.
+Kök `AGENTS.md` + `opencode.json` (MCP şeması Cursor’dan farklı). Snippet: `yabgu_host_setup` host=`opencode`. Docs: [Config](https://opencode.ai/docs/config/).
 
-Yazım diğer `AGENTS.md` okuyanlarla aynı: kısa, komut, yasak. [how-to-write.md](../docs/how-to-write.md)
-
-## Amp, Factory, Jules, Goose, OpenCode, Zed, Warp, Kilo
+## Amp, Factory, Jules, Goose, Zed, Warp, Kilo
 
 Bunlar [agents.md](https://agents.md/) ekosistemine dahil. Kök `AGENTS.md` birincil dosyadır.
 
@@ -39,7 +41,11 @@ Gemini / Jules için Google tarafında `GEMINI.md` de görülebilir; Jules ajan�
 
 ## Continue.dev
 
-`.continue/` altında YAML/JSON config + rules. `AGENTS.md` native birincil dosya değildir; kuralları Continue formatında tut veya AGENTS.md'ye pointer koy.
+`.continue/` altında YAML/JSON config + rules. `AGENTS.md` native birincil dosya değildir; kuralları Continue formatında tut veya AGENTS.md’ye pointer koy.
+
+## ChatGPT web
+
+Repo `.md` otomatik yüklenmez. Yapıştırma şablonu: [`templates/chatgpt/web-instructions.md`](../templates/chatgpt/web-instructions.md). Codex kullanıyorsan dosya yeter.
 
 ## Özet kural
 
