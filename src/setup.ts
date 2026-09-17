@@ -17,7 +17,7 @@ export function hostSetupSnippet(host: SetupHostId): string {
     "yabgu": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "yabgu", "mcp"]
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"]
     }
   }
 }
@@ -26,7 +26,7 @@ export function hostSetupSnippet(host: SetupHostId): string {
       return `# Claude Code
 # Docs: https://code.claude.com/docs/en/mcp
 
-claude mcp add --transport stdio yabgu -- npx -y yabgu mcp
+claude mcp add --transport stdio yabgu -- npx -y @emrahyasinisik/yabgu mcp
 
 # Project share (.mcp.json) uses scope project and may prompt for trust.
 `;
@@ -38,7 +38,7 @@ claude mcp add --transport stdio yabgu -- npx -y yabgu mcp
 
 [mcp_servers.yabgu]
 command = "npx"
-args = ["-y", "yabgu", "mcp"]
+args = ["-y", "@emrahyasinisik/yabgu", "mcp"]
 startup_timeout_sec = 20
 default_tools_approval_mode = "writes"
 `;
@@ -51,7 +51,7 @@ default_tools_approval_mode = "writes"
     "yabgu": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "yabgu", "mcp"]
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"]
     }
   }
 }
@@ -64,7 +64,7 @@ default_tools_approval_mode = "writes"
     "yabgu": {
       "type": "local",
       "command": "npx",
-      "args": ["-y", "yabgu", "mcp"],
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"],
       "env": { "YABGU_READ_ONLY": "1" },
       "tools": ["yabgu_get_started", "yabgu_template", "yabgu_host_guide", "yabgu_host_setup", "yabgu_scan", "yabgu_plan", "yabgu_measure"]
     }
@@ -80,7 +80,7 @@ default_tools_approval_mode = "writes"
   "mcpServers": {
     "yabgu": {
       "command": "npx",
-      "args": ["-y", "yabgu", "mcp"],
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"],
       "timeout": 30000,
       "trust": false
     }
@@ -94,7 +94,7 @@ default_tools_approval_mode = "writes"
 
 [mcp_servers.yabgu]
 command = "npx"
-args = ["-y", "yabgu", "mcp"]
+args = ["-y", "@emrahyasinisik/yabgu", "mcp"]
 startup_timeout_sec = 30
 `;
     case "windsurf":
@@ -105,7 +105,7 @@ startup_timeout_sec = 30
   "mcpServers": {
     "yabgu": {
       "command": "npx",
-      "args": ["-y", "yabgu", "mcp"]
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"]
     }
   }
 }
@@ -118,7 +118,7 @@ startup_timeout_sec = 30
   "mcp": {
     "yabgu": {
       "type": "local",
-      "command": ["npx", "-y", "yabgu", "mcp"],
+      "command": ["npx", "-y", "@emrahyasinisik/yabgu", "mcp"],
       "enabled": true
     }
   }
@@ -130,7 +130,7 @@ startup_timeout_sec = 30
   "mcpServers": {
     "yabgu": {
       "command": "npx",
-      "args": ["-y", "yabgu", "mcp"],
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"],
       "disabled": false
     }
   }
