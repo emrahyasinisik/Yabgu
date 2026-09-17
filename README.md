@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-  <strong>Yabgu</strong> — Göktürk unvanı: kağanın yanında işi yürüten yönetici.<br/>
-  Bu repoda model kağan değil; kısa talimat dosyaları yabgudur.
+  <strong>Yabgu</strong> — an Old Turkic title: the ruler who carries out the khagan’s work.<br/>
+  In this repo the model is not the khagan; short instruction files are the yabgu.
 </p>
 
 <p align="center">
@@ -16,69 +16,73 @@
 
 ---
 
-**Amaç:** Cursor, Claude, Codex, Copilot, Gemini, Grok ve benzeri ajanları **daha doğru** ve **daha az token** ile kullanmak — modeli değiştirmeden, her turda yüklenen talimatı düzelterek.
+**Goal:** Make coding agents (Cursor, Claude, Codex, Copilot, Gemini, Grok, and similar) **more accurate** and **cheaper on tokens** — without switching models — by fixing the instruction files loaded every turn.
 
-| Katalog + şablonlar | Yerel MCP |
+| Catalog + templates | Local MCP |
 | --- | --- |
-| Native dosya matrisı, yazım rehberi, copy-paste starters | `scan` → `plan` → onay → `apply` · `measure` before/after |
+| Native file matrix, writing guide, copy-paste starters | `scan` → `plan` → approve → `apply` · `measure` / `conflicts` / `forge_skill` |
 
 ```mermaid
 flowchart LR
   A[Repo] --> B[yabgu_scan]
   B --> C[yabgu_plan]
-  C --> D[Drafts + neden]
-  D --> E{Kullanıcı onayı}
-  E -->|evet| F[yabgu_apply]
-  E -->|hayır| D
+  C --> D[Drafts + why]
+  D --> E{User approval}
+  E -->|yes| F[yabgu_apply]
+  E -->|no| D
   F --> G[yabgu_measure]
+  C --> H[yabgu_conflicts]
+  C --> I[yabgu_forge_skill]
 ```
 
-> Yerel **stdio** MCP. Repo içeriği yabgu sunucusuna gitmez. Copilot cloud için `YABGU_READ_ONLY=1`.
+> Local **stdio** MCP. Repo contents never go to a yabgu server. For Copilot cloud use `YABGU_READ_ONLY=1`.
 
-## Neden token düşer, doğruluk artar
+Project timeline: [docs/history.md](docs/history.md). Some deeper docs under `docs/` and `tools/` are still Turkish; templates stay English.
 
-Ajan her mesajda stack’i, test komutunu ve “yapma” listesini yeniden keşfetmez. Keşif turları en pahalı kısımdır.
+## Why tokens drop and accuracy rises
 
-| Yapılan hata | Sonuç |
+The agent stops rediscovering the stack, test command, and “do not” list on every message. Discovery turns are the expensive part.
+
+| Common mistake | Result |
 | --- | --- |
-| Aynı metni `CLAUDE.md` + `AGENTS.md` + Copilot’a yapıştırmak | Token × araç · çelişince yanlış kod |
-| 800 satırlık her-oturum kuralı | Bağlam şişer, kurala uyulmaz |
-| Hiç dosya olmaması | Her seferinde tarar, uydurur |
-| ChatGPT web’den repo md beklemek | Dosya yüklenmez; ayara yazılmalı |
+| Pasting the same text into `CLAUDE.md` + `AGENTS.md` + Copilot | Tokens × tools · conflicts → wrong code |
+| An 800-line always-on rule file | Context bloat; rules ignored |
+| No instruction files at all | Re-scans and invents every time |
+| Expecting ChatGPT web to load repo markdown | It does not; paste into product settings |
 
-Doğru düzen: ince `AGENTS.md` + ince adaptör → [shared source of truth](docs/shared-source-of-truth.md) · [nasıl yazılır](docs/how-to-write.md) · [host / MCP](docs/hosts.md)
+Correct shape: thin `AGENTS.md` + thin adapters → [shared source of truth](docs/shared-source-of-truth.md) · [how to write](docs/how-to-write.md) · [hosts / MCP](docs/hosts.md)
 
-## Hızlı cevap
+## Quick matrix
 
-| Araç | Önce bunları kullan | İsteğe bağlı / native | Okumaz (varsayılan) |
+| Tool | Prefer these | Optional / native | Usually does not load |
 | --- | --- | --- | --- |
 | **Cursor** | `AGENTS.md`, `.cursor/rules/*.mdc` | `.cursor/skills/*/SKILL.md` | `CLAUDE.md` |
-| **Claude Code** | `CLAUDE.md` veya `.claude/CLAUDE.md` | `.claude/rules/`, skills, `CLAUDE.local.md` | `AGENTS.md` (doğrudan değil) |
-| **ChatGPT / Codex** | `AGENTS.md` | `AGENTS.override.md`, `~/.codex/AGENTS.md` | `CLAUDE.md` (doğrudan değil) |
+| **Claude Code** | `CLAUDE.md` or `.claude/CLAUDE.md` | `.claude/rules/`, skills, `CLAUDE.local.md` | `AGENTS.md` (not directly) |
+| **ChatGPT / Codex** | `AGENTS.md` | `AGENTS.override.md`, `~/.codex/AGENTS.md` | `CLAUDE.md` (not directly) |
 | **GitHub Copilot** | `.github/copilot-instructions.md`, `AGENTS.md` | `.github/instructions/*.instructions.md` | — |
-| **Gemini CLI** | `GEMINI.md` | `~/.gemini/GEMINI.md`, ayarla `AGENTS.md` | — |
+| **Gemini CLI** | `GEMINI.md` | `~/.gemini/GEMINI.md`, optional `AGENTS.md` via settings | — |
 | **Grok Build** | `AGENTS.md` | skills, hooks; `grok inspect` | — |
-| **Windsurf** | `AGENTS.md`, `.devin/rules/*.md` | `.windsurf/rules/` (eski), skills | — |
-| **Cline / Roo** | `.clinerules` veya `.clinerules/` | `AGENTS.md` (destek artıyor) | — |
-| **ChatGPT web** | Ürün içi Instructions | Project instructions | Repo `.md` otomatik yüklenmez |
+| **Windsurf** | `AGENTS.md`, `.devin/rules/*.md` | `.windsurf/rules/` (legacy), skills | — |
+| **Cline / Roo** | `.clinerules` or `.clinerules/` | `AGENTS.md` (support growing) | — |
+| **ChatGPT web** | In-product Instructions | Project instructions | Repo `.md` is not auto-loaded |
 
-Detay: [docs/matrix.md](docs/matrix.md)
+Details: [docs/matrix.md](docs/matrix.md)
 
-## Kurulum
+## Setup
 
-### 1) Katalog (her yerde çalışır)
+### 1) Catalog (works everywhere)
 
 ```bash
-# şablonları kendi projenize kopyalayın
+# copy starters into your project
 cp templates/AGENTS.md /path/to/your-project/AGENTS.md
 ```
 
-1. [`templates/AGENTS.md`](templates/AGENTS.md) → repo kökü (Cursor, Codex, Copilot, Grok)
+1. [`templates/AGENTS.md`](templates/AGENTS.md) → repo root (Cursor, Codex, Copilot, Grok)
 2. Claude → [`templates/CLAUDE.md`](templates/CLAUDE.md) (`@AGENTS.md`)
-3. Cursor glob kuralları → [`templates/cursor/`](templates/cursor/)
+3. Cursor glob rules → [`templates/cursor/`](templates/cursor/)
 4. Copilot → [`templates/copilot/`](templates/copilot/)
 
-### 2) Yerel MCP
+### 2) Local MCP
 
 ```bash
 npm install
@@ -86,44 +90,46 @@ npm run build
 npx yabgu mcp
 ```
 
-Host snippet (Cursor / Claude / Codex / Copilot / …):
+Host install snippet (Cursor / Claude / Codex / Copilot / …):
 
 ```text
 yabgu_host_setup  →  host=cursor|claude|codex|copilot|…
 ```
 
-veya [docs/hosts.md](docs/hosts.md). İlk sorgu: [docs/first-query.md](docs/first-query.md)
+Or see [docs/hosts.md](docs/hosts.md). First query: [docs/first-query.md](docs/first-query.md)
 
-| Tool | Ne yapar |
+| Tool | Role |
 | --- | --- |
-| `yabgu_scan` / `yabgu_plan` | Yerel tarama + gerekçeli draft |
-| `yabgu_apply` | Yalnız onay sonrası yazar (elicitation veya `confirmed=true`) |
-| `yabgu_measure` | Setup health (before/after) — token iddiası değil |
-| `yabgu_conflicts` | Çelişen do/don't + farklı test/lint komutları |
-| `yabgu_forge_skill` | Prosedür → `SKILL.md` draft (yazmaz; apply sonra) |
-| `yabgu_get_started` / `yabgu_template` / `yabgu_host_*` | Rehber + şablon + kurulum |
+| `yabgu_scan` / `yabgu_plan` | Local scan + justified drafts |
+| `yabgu_apply` | Writes only after approval (elicitation or `confirmed=true`) |
+| `yabgu_measure` | Setup health (before/after) — not a token-savings claim |
+| `yabgu_conflicts` | Opposing do/don’t rules + mismatched test/lint commands |
+| `yabgu_forge_skill` | Procedure → `SKILL.md` draft (does not write; apply after) |
+| `yabgu_get_started` / `yabgu_template` / `yabgu_host_*` | Guides, templates, install snippets |
 
-`YABGU_READ_ONLY=1` → `yabgu_apply` kapalı (Copilot cloud için).
+`YABGU_READ_ONLY=1` → `yabgu_apply` disabled (for Copilot cloud).
 
-## Önerilen repo düzeni
+CLI extras: `npx yabgu measure <path>` · `npx yabgu conflicts <path>` · `npx yabgu forge <path>`
+
+## Recommended layout
 
 ```text
 your-project/
-├── AGENTS.md                          # ortak kaynak
-├── CLAUDE.md                          # @AGENTS.md + Claude notları
-├── GEMINI.md                          # ince Gemini adaptörü
+├── AGENTS.md                          # shared source of truth
+├── CLAUDE.md                          # @AGENTS.md + Claude-only notes
+├── GEMINI.md                          # thin Gemini adapter
 ├── .cursor/rules/                     # scoped .mdc
-├── .cursor/skills/.../SKILL.md        # görev prosedürü (her tura girmez)
+├── .cursor/skills/.../SKILL.md        # task procedure (not every turn)
 ├── .claude/rules/ · .claude/skills/
-├── .devin/rules/                      # Cascade (eski: .windsurf/rules/)
+├── .devin/rules/                      # Cascade (legacy: .windsurf/rules/)
 └── .github/
     ├── copilot-instructions.md
     └── instructions/*.instructions.md
 ```
 
-## Araç rehberleri & şablonlar
+## Host guides & templates
 
-| Rehber | Şablon |
+| Guide | Templates |
 | --- | --- |
 | [Cursor](tools/cursor.md) | [`always-apply.mdc`](templates/cursor/always-apply.mdc) · [`glob-rule.mdc`](templates/cursor/glob-rule.mdc) |
 | [Claude Code](tools/claude.md) | [`CLAUDE.md`](templates/CLAUDE.md) · [`testing.md`](templates/claude/testing.md) |
@@ -134,28 +140,32 @@ your-project/
 | [Windsurf](tools/windsurf.md) | [`style.md`](templates/windsurf/style.md) → `.devin/rules/` |
 | [Cline, Roo, OpenCode, …](tools/others.md) | [`clinerules.md`](templates/cline/clinerules.md) · [`web-instructions.md`](templates/chatgpt/web-instructions.md) |
 
-## Ne nereye yazılır?
+## What goes where?
 
-| İçerik | Dosya |
+| Content | File |
 | --- | --- |
-| Build / test / stil / mimari (her araç) | `AGENTS.md` |
+| Build / test / style / architecture (all tools) | `AGENTS.md` |
 | Claude `@` import, plan mode | `CLAUDE.md` |
 | Cursor glob / alwaysApply | `.cursor/rules/*.mdc` |
-| Görev bazlı uzun prosedür | `SKILL.md` |
-| Kişisel, commit edilmeyecek | `CLAUDE.local.md` / `AGENTS.override.md` |
+| Long task procedures | `SKILL.md` |
+| Personal, do not commit | `CLAUDE.local.md` / `AGENTS.override.md` |
 | Copilot path-specific | `.github/instructions/*.instructions.md` |
 
-Hedef: `AGENTS.md` ~200 satırın altında.
+Target: keep `AGENTS.md` under ~200 lines.
 
-## Bu repo ne değil
+## What this is not
 
-- Ajanın **nasıl konuştuğuna** karışmaz (ton, hitap, dil)
-- Model seçici / Auto router değil
-- ChatGPT web’e gizli dosya enjekte etmez
-- Ölçümsüz “%X token tasarrufu” iddiası vermez → [docs/measure.md](docs/measure.md)
+- Does **not** control how the agent speaks (tone, address, language)
+- Not a model picker / Auto router
+- Does not inject hidden files into ChatGPT web
+- Does not claim “%X token savings” without measurement → [docs/measure.md](docs/measure.md)
 
-Gizlilik ve ürün kuralı: [docs/product.md](docs/product.md) · consumer örneği: [examples/README.md](examples/README.md)
+Privacy & product rules: [docs/product.md](docs/product.md) · consumer example: [examples/README.md](examples/README.md) · conflicts & forge: [docs/conflicts-forge.md](docs/conflicts-forge.md)
 
-## Kaynaklar
+## License
 
-[AGENTS.md](https://agents.md/) · [Claude memory](https://code.claude.com/docs/en/memory) · [Cursor rules](https://cursor.com/docs/rules) · [Codex AGENTS.md](https://developers.openai.com/codex/guides/agents-md) · [Copilot instructions](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions) · [Gemini.md](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/gemini-md.md) · [Grok Build](https://docs.x.ai/build/overview) · [Cursor MCP](https://cursor.com/docs/mcp) · [Claude MCP](https://code.claude.com/docs/en/mcp) · [Codex MCP](https://developers.openai.com/codex/mcp) · [Copilot MCP](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/extend-coding-agent-with-mcp) · [Gemini MCP](https://google-gemini.github.io/gemini-cli/docs/tools/mcp-server.html) · [Grok MCP](https://docs.x.ai/build/features/mcp-servers) · [Windsurf MCP](https://docs.devin.ai/windsurf/plugins/cascade/mcp) · [OpenCode](https://opencode.ai/docs/config/)
+[MIT](LICENSE) © 2026 Emrah Yasin IŞIK
+
+## References
+
+[AGENTS.md](https://agents.md/) · [Claude memory](https://code.claude.com/docs/en/memory) · [Cursor rules](https://cursor.com/docs/rules) · [Codex AGENTS.md](https://developers.openai.com/codex/guides/agents-md) · [Copilot instructions](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-repository-instructions) · [Gemini.md](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/gemini-md.md) · [Grok Build](https://docs.x.ai/build/overview) · [Cursor MCP](https://cursor.com/docs/mcp) · [Claude MCP](https://code.claude.com/docs/en/mcp) · [Codex MCP](https://developers.openai.com/codex/mcp) · [Copilot MCP](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/extend-coding-agent-with-mcp) · [Gemini MCP](https://google-gemini.github.io/gemini-cli/docs/tools/mcp-server.html) · [Grok MCP](https://docs.x.ai/build/features/mcp-servers) · [Windsurf MCP](https://docs.devin.ai/windsurf/plugins/cascade/mcp) · [OpenCode](https://opencode.ai/docs/config/)

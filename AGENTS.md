@@ -22,7 +22,7 @@ npx yabgu forge <path>
 ## Layout
 
 - `README.md` — purpose, file matrix, how to copy templates
-- `docs/` — product rule, writing guide, host/MCP research, comparison matrix, measure protocol
+- `docs/` — product rule, writing guide, host/MCP research, comparison matrix, measure protocol, history
 - `tools/` — per-product file lists
 - `templates/` — copy-paste starter files
 - `fixtures/` — tiny repos for unit tests

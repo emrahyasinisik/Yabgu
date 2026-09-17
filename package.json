@@ -38,11 +38,16 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/emrahyasinisik/yabgu"
+    "url": "git+https://github.com/emrahyasinisik/Yabgu.git"
   },
+  "bugs": {
+    "url": "https://github.com/emrahyasinisik/Yabgu/issues"
+  },
+  "homepage": "https://github.com/emrahyasinisik/Yabgu#readme",
   "keywords": [
     "agents",
     "mcp",
+    "agents-md",
     "coding-agent",
     "cursor",
     "claude",
