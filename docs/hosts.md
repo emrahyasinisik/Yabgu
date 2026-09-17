@@ -14,13 +14,13 @@ Yabgu konuşma stiline karışmaz. MCP native dosya **önerir**; `apply` yalnız
 | Copilot | `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, `AGENTS.md` | [Custom instructions](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions) |
 | Gemini CLI | `GEMINI.md`, `~/.gemini/GEMINI.md` | [GEMINI.md](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/gemini-md.md) |
 | Grok Build | `AGENTS.md`; `grok inspect` | [Grok Build](https://docs.x.ai/build/overview) |
-| Windsurf | `.windsurf/rules/`, eski `.windsurfrules` | Cascade / Devin docs |
+| Windsurf / Cascade | `.devin/rules/` (tercih), `.windsurf/rules/` fallback, `AGENTS.md` | [Memories & Rules](https://docs.windsurf.com/windsurf/cascade/memories) |
 | OpenCode | `AGENTS.md`, `opencode.json` | [Config](https://opencode.ai/docs/config/) |
 | ChatGPT web sohbet | Repo dosyası yok; Custom / Project instructions | Codex ayrı ürün |
 
-## MCP nasıl bağlanır (sonraki iş)
+## MCP nasıl bağlanır
 
-Ortak: **stdio** (yerel `command` + `args`) her yerde var. Yabgu’nun resmi kurulumu bu: süreç kullanıcının makinesinde, repo yabgu sunucusuna gitmez ([gizlilik](product.md)). Remote **HTTP** ikinci ve yalnızca kullanıcının kendi endpoint’i. Şema ve dosya adı host’tan host’a değişir — tek `mcp.json` herkese yapıştırılmaz.
+Ortak: **stdio** (yerel `command` + `args`) her yerde var. Snippet üretimi: `yabgu_host_setup` (host başına json/toml/array). Yabgu’nun resmi kurulumu yerel stdio: süreç kullanıcının makinesinde, repo yabgu sunucusuna gitmez ([gizlilik](product.md)). Remote **HTTP** ikinci ve yalnızca kullanıcının kendi endpoint’i. Tek `mcp.json` herkese yapıştırılmaz.
 
 ### Cursor
 
@@ -113,7 +113,7 @@ Ortak: **stdio** (yerel `command` + `args`) her yerde var. Yabgu’nun resmi kur
 - `opencode.json` → `"mcp": { "yabgu": { "type": "local", "command": ["node", "..."], "enabled": true } }`
 - Şema Cursor’dan farklı (`mcp` + `type: local` + command **array**)
 
-## Sonraki MCP için zorunlu farklar
+## Kurulumda zorunlu farklar
 
 | Konu | Ne yapılmalı |
 | --- | --- |

@@ -1,7 +1,7 @@
 {
   "name": "yabgu",
   "version": "0.1.0",
-  "description": "Short instruction files for coding agents — catalog, templates, and a guide-only MCP harness",
+  "description": "Short instruction files for coding agents — catalog, templates, and a local stdio MCP (scan/plan/apply/measure)",
   "type": "module",
   "bin": {
     "yabgu": "./dist/cli.js"

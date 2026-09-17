@@ -1,6 +1,6 @@
 # Real test: consumer example
 
-`examples/test-project` is a fake product repo (**acme-dashboard**). It starts **without** instruction files so Yabgu’s before → setup → after loop is meaningful.
+`examples/test-project` is a fake product repo (**acme-dashboard**). Instruction files are **gitignored** so the tree stays in a clean “before” state; run setup locally to generate them.
 
 ## Quick run (from yabgu root)
 

@@ -17,6 +17,7 @@ export const TEMPLATE_IDS = [
   "agents",
   "claude",
   "gemini",
+  "gemini-settings",
   "cursor-always",
   "cursor-glob",
   "copilot-instructions",
@@ -24,6 +25,8 @@ export const TEMPLATE_IDS = [
   "claude-testing",
   "skill",
   "windsurf-style",
+  "cline-rules",
+  "chatgpt-web",
 ] as const;
 
 export type TemplateId = (typeof TEMPLATE_IDS)[number];
@@ -32,6 +35,7 @@ const TEMPLATE_PATHS: Record<TemplateId, string> = {
   agents: "templates/AGENTS.md",
   claude: "templates/CLAUDE.md",
   gemini: "templates/GEMINI.md",
+  "gemini-settings": "templates/gemini/settings.json",
   "cursor-always": "templates/cursor/always-apply.mdc",
   "cursor-glob": "templates/cursor/glob-rule.mdc",
   "copilot-instructions": "templates/copilot/copilot-instructions.md",
@@ -39,6 +43,8 @@ const TEMPLATE_PATHS: Record<TemplateId, string> = {
   "claude-testing": "templates/claude/testing.md",
   skill: "templates/skills/SKILL.md",
   "windsurf-style": "templates/windsurf/style.md",
+  "cline-rules": "templates/cline/clinerules.md",
+  "chatgpt-web": "templates/chatgpt/web-instructions.md",
 };
 
 // ── Host IDs ──────────────────────────────────────────────────
@@ -49,6 +55,7 @@ export const HOST_IDS = [
   "codex",
   "copilot",
   "gemini",
+  "grok",
   "windsurf",
   "others",
 ] as const;
@@ -61,6 +68,7 @@ const HOST_PATHS: Record<HostId, string> = {
   codex: "tools/chatgpt-codex.md",
   copilot: "tools/github-copilot.md",
   gemini: "tools/gemini.md",
+  grok: "tools/grok.md",
   windsurf: "tools/windsurf.md",
   others: "tools/others.md",
 };
@@ -102,13 +110,16 @@ export function listTemplates(): Array<{ id: TemplateId; copyTo: string }> {
     { id: "agents", copyTo: "AGENTS.md (project root)" },
     { id: "claude", copyTo: "CLAUDE.md (project root)" },
     { id: "gemini", copyTo: "GEMINI.md (project root)" },
+    { id: "gemini-settings", copyTo: ".gemini/settings.json" },
     { id: "cursor-always", copyTo: ".cursor/rules/<name>.mdc" },
     { id: "cursor-glob", copyTo: ".cursor/rules/<name>.mdc" },
     { id: "copilot-instructions", copyTo: ".github/copilot-instructions.md" },
     { id: "copilot-path", copyTo: ".github/instructions/<name>.instructions.md" },
     { id: "claude-testing", copyTo: ".claude/rules/testing.md" },
     { id: "skill", copyTo: ".cursor/skills/<name>/SKILL.md or .claude/skills/<name>/SKILL.md" },
-    { id: "windsurf-style", copyTo: ".windsurf/rules/style.md" },
+    { id: "windsurf-style", copyTo: ".devin/rules/style.md (or .windsurf/rules/)" },
+    { id: "cline-rules", copyTo: ".clinerules or .clinerules/<name>.md" },
+    { id: "chatgpt-web", copyTo: "paste into ChatGPT Custom / Project instructions" },
   ];
 }
 

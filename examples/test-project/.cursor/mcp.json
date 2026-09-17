@@ -1,9 +1,8 @@
 {
   "mcpServers": {
     "yabgu": {
-      "type": "stdio",
       "command": "node",
-      "args": ["c:\\Users\\SSemr\\yabgu\\dist\\cli.js", "mcp"]
+      "args": ["../../dist/cli.js", "mcp"]
     }
   }
 }

@@ -27,10 +27,12 @@ const INSTRUCTION_CANDIDATES = [
   "CLAUDE.md",
   "GEMINI.md",
   ".github/copilot-instructions.md",
+  ".gemini/settings.json",
   ".cursor/rules",
   ".claude/rules",
   ".claude/skills",
   ".cursor/skills",
+  ".devin/rules",
   ".windsurf/rules",
   ".clinerules",
 ] as const;

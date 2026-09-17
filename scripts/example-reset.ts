@@ -13,6 +13,11 @@ const targets = [
   ".github/instructions",
   ".cursor/rules",
   ".claude/rules",
+  ".claude/skills",
+  ".devin/rules",
+  ".windsurf/rules",
+  ".clinerules",
+  ".gemini",
 ];
 
 for (const rel of targets) {

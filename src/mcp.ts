@@ -394,7 +394,7 @@ export function createServer(opts: CreateServerOptions = {}): McpServer {
       description:
         "When you need vendor-backed file names, formats, and limits for one host.",
       inputSchema: {
-        host: hostIdEnum.describe("Host id. others covers Cline/Grok/Aider/…"),
+        host: hostIdEnum.describe("Host id. others covers Cline/OpenCode/Aider/…"),
       },
       annotations: READ_ONLY,
     },

@@ -31,10 +31,11 @@ Bu tablo "hangi araç hangi `.md` dosyasını otomatik yükler?" sorusuna cevap 
 | `.claude/skills/*/SKILL.md` | Claude Code | Skill tetiklenince |
 | `.github/copilot-instructions.md` | GitHub Copilot | Repo geneli |
 | `.github/instructions/**/*.instructions.md` | GitHub Copilot | `applyTo` glob |
-| `.windsurf/rules/*.md` | Windsurf | Kural ayarına göre |
+| `.devin/rules/*.md` | Windsurf / Cascade | Tercih edilen workspace rules (`trigger` frontmatter) |
+| `.windsurf/rules/*.md` | Windsurf / Cascade | Legacy fallback |
 | `.clinerules` veya `.clinerules/` | Cline / Roo | Proje kuralları |
-| `.devin/rules/` | Devin | `/init` (Claude) bunu da okuyabilir |
-| `GEMINI.md` / `.gemini/` | Gemini CLI | Proje + `~/.gemini/GEMINI.md` |
+| `.devin/rules/` (Devin cloud init) | Devin | Claude `/init` de okuyabilir |
+| `GEMINI.md` / `.gemini/settings.json` | Gemini CLI | Proje + `context.fileName` |
 | `opencode.json` + `AGENTS.md` | OpenCode | Native config + talimat |
 
 MCP config dosyaları (kurulum sonra; şema tahmini yok): [hosts.md](hosts.md)

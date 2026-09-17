@@ -60,6 +60,8 @@ veya global:
 ~/.codex/AGENTS.md
 ```
 
+ChatGPT **web** sohbeti repo dosyasını okumaz → [`templates/chatgpt/web-instructions.md`](../templates/chatgpt/web-instructions.md).
+
 ## 5. Copilot
 
 İki katman kullan:
@@ -71,7 +73,9 @@ Path-specific için `.github/instructions/*.instructions.md` ve `applyTo` frontm
 
 ## 6. Gemini CLI
 
-`GEMINI.md` yaz. Gemini `@` import genişletmez; ya içeriği kopyala ya da ayarla:
+`GEMINI.md` yaz. Gemini `@` import genişletmez; ya içeriği kopyala ya da ayarla.
+
+Şablon ayar: [`templates/gemini/settings.json`](../templates/gemini/settings.json) → `.gemini/settings.json`:
 
 ```json
 {
@@ -81,9 +85,21 @@ Path-specific için `.github/instructions/*.instructions.md` ve `applyTo` frontm
 }
 ```
 
-Bu ayar `.gemini/settings.json` içinde tutulur.
+İnce adaptör: [`templates/GEMINI.md`](../templates/GEMINI.md)
 
-## 7. Gitignore
+## 7. Grok Build
+
+Kök `AGENTS.md` yeter. Skills / hooks ayrı. Doğrulama: `grok inspect`. Rehber: [`tools/grok.md`](../tools/grok.md).
+
+## 8. Windsurf / Cascade
+
+`AGENTS.md` + isteğe bağlı `.devin/rules/*.md` (eski: `.windsurf/rules/`). Ortak kuralları kopyalama. Rehber: [`tools/windsurf.md`](../tools/windsurf.md).
+
+## 9. Cline / Roo
+
+`AGENTS.md` + ince `.clinerules` (veya `.clinerules/`). Şablon: [`templates/cline/clinerules.md`](../templates/cline/clinerules.md).
+
+## 10. Gitignore
 
 Kişisel dosyaları commit etme:
 
@@ -101,5 +117,8 @@ Yeni bir projede:
 - [ ] Claude kullanılıyorsa `CLAUDE.md` `@AGENTS.md` ile başlıyor
 - [ ] Cursor scoped kural ihtiyacı varsa `.cursor/rules/`
 - [ ] Copilot kullanılıyorsa `.github/copilot-instructions.md`
-- [ ] Gemini kullanılıyorsa `GEMINI.md` veya `context.fileName`
+- [ ] Gemini kullanılıyorsa `GEMINI.md` ve/veya `.gemini/settings.json`
+- [ ] Grok kullanılıyorsa `AGENTS.md` (+ isteğe bağlı skill); `grok inspect` ile doğrula
+- [ ] Windsurf kullanılıyorsa `.devin/rules/` veya `AGENTS.md` yeterli mi net
+- [ ] Cline kullanılıyorsa `.clinerules` ince tutuluyor
 - [ ] Local override dosyaları `.gitignore`'da

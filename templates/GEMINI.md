@@ -1,6 +1,6 @@
 # Gemini CLI instructions
 
-Gemini CLI does not expand `@AGENTS.md` imports. Either copy the shared rules here, or set `.gemini/settings.json`:
+Gemini CLI does not expand `@AGENTS.md` imports. Prefer copying [`templates/gemini/settings.json`](gemini/settings.json) to `.gemini/settings.json` so both `AGENTS.md` and this file load:
 
 ```json
 {

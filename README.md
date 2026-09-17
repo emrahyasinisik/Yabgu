@@ -58,7 +58,7 @@ Doğru düzen: ince `AGENTS.md` + ince adaptör → [shared source of truth](doc
 | **GitHub Copilot** | `.github/copilot-instructions.md`, `AGENTS.md` | `.github/instructions/*.instructions.md` | — |
 | **Gemini CLI** | `GEMINI.md` | `~/.gemini/GEMINI.md`, ayarla `AGENTS.md` | — |
 | **Grok Build** | `AGENTS.md` | skills, hooks; `grok inspect` | — |
-| **Windsurf** | `.windsurf/rules/*.md` | `AGENTS.md`, eski `.windsurfrules` | — |
+| **Windsurf** | `AGENTS.md`, `.devin/rules/*.md` | `.windsurf/rules/` (eski), skills | — |
 | **Cline / Roo** | `.clinerules` veya `.clinerules/` | `AGENTS.md` (destek artıyor) | — |
 | **ChatGPT web** | Ürün içi Instructions | Project instructions | Repo `.md` otomatik yüklenmez |
 
@@ -113,6 +113,7 @@ your-project/
 ├── .cursor/rules/                     # scoped .mdc
 ├── .cursor/skills/.../SKILL.md        # görev prosedürü (her tura girmez)
 ├── .claude/rules/ · .claude/skills/
+├── .devin/rules/                      # Cascade (eski: .windsurf/rules/)
 └── .github/
     ├── copilot-instructions.md
     └── instructions/*.instructions.md
@@ -126,9 +127,10 @@ your-project/
 | [Claude Code](tools/claude.md) | [`CLAUDE.md`](templates/CLAUDE.md) · [`testing.md`](templates/claude/testing.md) |
 | [ChatGPT / Codex](tools/chatgpt-codex.md) | [`AGENTS.md`](templates/AGENTS.md) |
 | [GitHub Copilot](tools/github-copilot.md) | [`copilot-instructions.md`](templates/copilot/copilot-instructions.md) |
-| [Gemini CLI](tools/gemini.md) | [`GEMINI.md`](templates/GEMINI.md) |
-| [Windsurf](tools/windsurf.md) | [`style.md`](templates/windsurf/style.md) |
-| [Cline, Roo, Grok, …](tools/others.md) | [`SKILL.md`](templates/skills/SKILL.md) |
+| [Gemini CLI](tools/gemini.md) | [`GEMINI.md`](templates/GEMINI.md) · [`settings.json`](templates/gemini/settings.json) |
+| [Grok Build](tools/grok.md) | [`AGENTS.md`](templates/AGENTS.md) · [`SKILL.md`](templates/skills/SKILL.md) |
+| [Windsurf](tools/windsurf.md) | [`style.md`](templates/windsurf/style.md) → `.devin/rules/` |
+| [Cline, Roo, OpenCode, …](tools/others.md) | [`clinerules.md`](templates/cline/clinerules.md) · [`web-instructions.md`](templates/chatgpt/web-instructions.md) |
 
 ## Ne nereye yazılır?
 

@@ -1,6 +1,6 @@
 import type { HostId } from "./content.js";
 
-export type SetupHostId = HostId | "grok" | "opencode" | "cline";
+export type SetupHostId = HostId | "opencode" | "cline";
 
 /**
  * Vendor-shaped stdio snippets for installing the yabgu MCP.
@@ -137,10 +137,10 @@ startup_timeout_sec = 30
 }
 `;
     case "others":
-      return `# Others (Cline / Grok / OpenCode / Aider-adjacent)
+      return `# Others (Cline / OpenCode / Aider-adjacent)
 # Prefer host-specific IDs: cline, grok, opencode.
 # Shared rule: local stdio only; do not point at a yabgu-operated HTTP endpoint.
-# See docs/hosts.md and tools/others.md.
+# See docs/hosts.md, tools/others.md, and tools/grok.md.
 `;
     default: {
       const _exhaustive: never = host;

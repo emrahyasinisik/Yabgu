@@ -1,7 +1,13 @@
+---
+trigger: always_on
+---
+
 # Style
 
-Place this under `.windsurf/rules/style.md` (or the name Windsurf assigns).
+Place under `.devin/rules/style.md` (preferred) or `.windsurf/rules/style.md` (legacy fallback).
 
 - Follow `AGENTS.md` for commands and architecture.
 - Match surrounding code; do not reformat unrelated files.
 - Prefer small, reviewable diffs.
+
+For path-scoped rules use `trigger: glob` and a `globs:` pattern instead of `always_on`.

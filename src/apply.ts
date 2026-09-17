@@ -20,6 +20,7 @@ const ALLOWED_EXACT = new Set([
   "GEMINI.md",
   ".github/copilot-instructions.md",
   ".clinerules",
+  ".gemini/settings.json",
 ]);
 
 const ALLOWED_PATTERNS: RegExp[] = [
@@ -28,6 +29,7 @@ const ALLOWED_PATTERNS: RegExp[] = [
   /^\.cursor\/skills\/[^/]+\/SKILL\.md$/i,
   /^\.claude\/rules\/[^/]+\.md$/i,
   /^\.claude\/skills\/[^/]+\/SKILL\.md$/i,
+  /^\.devin\/rules\/[^/]+\.md$/i,
   /^\.windsurf\/rules\/[^/]+\.md$/i,
   /^\.clinerules\/[^/]+\.md$/i,
 ];
@@ -104,7 +106,7 @@ export function applyFiles(
       skipped.push({
         path: rel,
         reason:
-          "not an instruction/adapter/skill path (AGENTS.md, CLAUDE.md, GEMINI.md, .github/copilot-instructions.md, .cursor/rules|skills, .claude/rules|skills, .windsurf/rules, .clinerules)",
+          "not an instruction/adapter/skill path (AGENTS.md, CLAUDE.md, GEMINI.md, .gemini/settings.json, .github/copilot-instructions.md, .cursor/rules|skills, .claude/rules|skills, .devin/rules, .windsurf/rules, .clinerules)",
       });
       continue;
     }

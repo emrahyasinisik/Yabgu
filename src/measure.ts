@@ -52,7 +52,12 @@ function collectMarkdownFiles(root: string): Array<{ rel: string; text: string }
     if (text != null) out.push({ rel, text });
   }
 
-  const ruleDirs = [".cursor/rules", ".claude/rules", ".windsurf/rules"];
+  const ruleDirs = [
+    ".cursor/rules",
+    ".claude/rules",
+    ".devin/rules",
+    ".windsurf/rules",
+  ];
   for (const dir of ruleDirs) {
     const abs = join(root, dir);
     if (!existsSync(abs) || !statSync(abs).isDirectory()) continue;

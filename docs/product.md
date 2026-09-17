@@ -6,8 +6,8 @@ Yabgu: daha doğru proje bağlamı, daha az token.
 
 ## Sıra
 
-1. **Katalog + şablonlar** — hangi ajan hangi native dosyayı okur, nasıl yazılır.
-2. **MCP (yerel stdio)** — doküman/şablon sunar; `scan` → `plan` → kullanıcı onayı → `apply`; `measure` ile before/after.
+1. **Katalog + şablonlar** — hangi ajan hangi native dosyayı okur, nasıl yazılır (ürün çekirdeği; önce bunu bitir / güncelle).
+2. **MCP (yerel stdio)** — doküman/şablon sunar; `scan` → `plan` → kullanıcı onayı → `apply`; `measure` ile before/after. Katalogdan türetilir; native dosyaların yerini almaz.
 3. Kurulum [docs/hosts.md](hosts.md) resmi şemalarına göre — host başına snippet (`yabgu_host_setup`). Tahmin yok.
 
 MCP, native dosyaların yerini almaz. Dosyaları **önerir / onayla yazar**; her turda yükleme yine host’undur.

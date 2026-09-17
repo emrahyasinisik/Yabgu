@@ -162,6 +162,17 @@ export function planFromScan(
         draft: null,
       });
     }
+    const settings = statusOf(scan, ".gemini/settings.json");
+    if (!settings?.exists || settings.empty) {
+      proposals.push({
+        path: ".gemini/settings.json",
+        action: "review",
+        reason:
+          "Optional: set context.fileName to load AGENTS.md + GEMINI.md without duplicating rules. Template: gemini-settings.",
+        templateId: "gemini-settings",
+        draft: null,
+      });
+    }
   }
 
   if (hosts.includes("copilot")) {
@@ -201,13 +212,16 @@ export function planFromScan(
   }
 
   if (hosts.includes("windsurf")) {
+    const devin = statusOf(scan, ".devin/rules");
     const wind = statusOf(scan, ".windsurf/rules");
-    if (!wind?.exists || wind.empty) {
+    const hasRules =
+      (devin?.exists && !devin.empty) || (wind?.exists && !wind.empty);
+    if (!hasRules) {
       proposals.push({
-        path: ".windsurf/rules/",
+        path: ".devin/rules/",
         action: "review",
         reason:
-          "Windsurf rules are optional. Add only if the team uses Cascade regularly.",
+          "Cascade/Windsurf rules are optional (.devin/rules preferred; .windsurf/rules is legacy). Add only if the team uses Cascade regularly.",
         templateId: "windsurf-style",
         draft: null,
       });
