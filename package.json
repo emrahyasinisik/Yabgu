@@ -1,10 +1,10 @@
 {
-  "name": "yabgu",
+  "name": "@emrahyasinisik/yabgu",
   "version": "0.1.0",
   "description": "Short instruction files for coding agents — catalog, templates, and a local stdio MCP (scan/plan/apply/measure/conflicts/forge)",
   "type": "module",
   "bin": {
-    "yabgu": "./dist/cli.js"
+    "yabgu": "dist/cli.js"
   },
   "files": [
     "dist/",
@@ -37,6 +37,9 @@
     "node": ">=18"
   },
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/emrahyasinisik/Yabgu.git"

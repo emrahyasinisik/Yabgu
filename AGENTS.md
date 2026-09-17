@@ -17,6 +17,7 @@ npx yabgu mcp
 npx yabgu measure <path>
 npx yabgu conflicts <path>
 npx yabgu forge <path>
+# published package: npm i -g @emrahyasinisik/yabgu  →  same `yabgu` bin
 ```
 
 ## Layout

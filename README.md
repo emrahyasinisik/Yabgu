@@ -72,13 +72,15 @@ Details: [docs/matrix.md](docs/matrix.md)
 
 ### npm (recommended)
 
+npm rejected the unscoped name `yabgu` as too similar to `yargs`, so the package is scoped:
+
 ```bash
-npm install -g yabgu
+npm install -g @emrahyasinisik/yabgu
 yabgu mcp
 # or without a global install:
-npx yabgu measure .
-npx yabgu conflicts .
-npx yabgu forge .
+npx @emrahyasinisik/yabgu measure .
+npx @emrahyasinisik/yabgu conflicts .
+npx @emrahyasinisik/yabgu forge .
 ```
 
 Requires Node.js 18+. After install, wire the MCP into your host with:
@@ -97,7 +99,7 @@ cp Yabgu/templates/AGENTS.md /path/to/your-project/AGENTS.md
 Or after a global install, copy from the package:
 
 ```bash
-cp "$(npm root -g)/yabgu/templates/AGENTS.md" /path/to/your-project/AGENTS.md
+cp "$(npm root -g)/@emrahyasinisik/yabgu/templates/AGENTS.md" /path/to/your-project/AGENTS.md
 ```
 
 1. [`templates/AGENTS.md`](templates/AGENTS.md) → repo root (Cursor, Codex, Copilot, Grok)
@@ -134,7 +136,7 @@ Or see [docs/hosts.md](docs/hosts.md). First query: [docs/first-query.md](docs/f
 
 `YABGU_READ_ONLY=1` → `yabgu_apply` disabled (for Copilot cloud).
 
-CLI extras: `npx yabgu measure <path>` · `npx yabgu conflicts <path>` · `npx yabgu forge <path>`
+CLI extras: `npx @emrahyasinisik/yabgu measure <path>` · `conflicts` · `forge`
 
 ## Recommended layout
 
