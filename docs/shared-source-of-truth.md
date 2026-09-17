@@ -114,10 +114,11 @@ AGENTS.override.md
 On a new project:
 
 - [ ] `AGENTS.md` exists
-- [ ] If Claude is used, `CLAUDE.md` starts with `@AGENTS.md`
+- [ ] Add other-host adapters **only** for tools the team actually uses (Cursor does not need `GEMINI.md`)
+- [ ] If Claude Code is used, `CLAUDE.md` starts with `@AGENTS.md`
 - [ ] If Cursor needs scoped rules, `.cursor/rules/` exists
 - [ ] If Copilot is used, `.github/copilot-instructions.md` exists
-- [ ] If Gemini is used, `GEMINI.md` and/or `.gemini/settings.json`
+- [ ] If Gemini CLI is used, `GEMINI.md` and/or `.gemini/settings.json`
 - [ ] If Grok is used, `AGENTS.md` (+ optional skill); verify with `grok inspect`
 - [ ] If Windsurf is used, `.devin/rules/` or confirm `AGENTS.md` alone is enough
 - [ ] If Cline is used, `.clinerules` stays thin

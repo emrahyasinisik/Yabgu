@@ -27,11 +27,12 @@ async function connectClient(opts?: {
   elicitation?: boolean;
   elicitAction?: "accept" | "decline" | "cancel";
   elicitApprove?: boolean;
+  clientName?: string;
 }) {
   const server = createServer({ readOnly: opts?.readOnly });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   const client = new Client(
-    { name: "yabgu-test", version: "0.0.0" },
+    { name: opts?.clientName ?? "yabgu-test", version: "0.0.0" },
     opts?.elicitation
       ? { capabilities: { elicitation: { form: {} } } }
       : undefined,
@@ -243,6 +244,37 @@ describe("MCP harness", () => {
     } finally {
       await close();
       rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("cursor session scan does not treat GEMINI.md as a gap", async () => {
+    const { client, close } = await connectClient({ clientName: "cursor" });
+    try {
+      const scanned = await client.callTool({
+        name: "yabgu_scan",
+        arguments: { root: join(fileURLToPath(new URL(".", import.meta.url)), "..", "fixtures", "monorepo") },
+      });
+      assert.notEqual(scanned.isError, true);
+      const text = String(
+        (scanned.content as Array<{ text?: string }>)[0]?.text ?? "",
+      );
+      assert.match(text, /This session is Cursor/);
+      assert.match(text, /Next\.js/);
+      const [sessionBlock] = text.split("## Other hosts");
+      assert.doesNotMatch(sessionBlock, /Missing[\s\S]*`GEMINI\.md`/);
+
+      const planned = await client.callTool({
+        name: "yabgu_plan",
+        arguments: { root: join(fileURLToPath(new URL(".", import.meta.url)), "..", "fixtures", "monorepo") },
+      });
+      assert.notEqual(planned.isError, true);
+      const planText = String(
+        (planned.content as Array<{ text?: string }>)[0]?.text ?? "",
+      );
+      assert.match(planText, /\*\*create\*\* `AGENTS\.md`/);
+      assert.doesNotMatch(planText, /\*\*create\*\* `GEMINI\.md`/);
+    } finally {
+      await close();
     }
   });
 

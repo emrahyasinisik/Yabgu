@@ -19,23 +19,24 @@ import {
 import { formatMeasureReport, measureRepo } from "./measure.js";
 import { findConflicts, formatConflictReport } from "./conflicts.js";
 import { forgeSkill } from "./forge.js";
-import { planFromScan, type HostHint } from "./plan.js";
+import { resolveHostSession, type HostHint, type HostSession } from "./hosts.js";
+import { formatPlanReport, planFromScan } from "./plan.js";
 import { isReadOnlyFromEnv } from "./policy.js";
 import {
   resolveProjectRoot,
   uriToFsPath,
   type WorkspaceRoots,
 } from "./root.js";
-import { scanRepo } from "./scan.js";
+import { formatScanReport, scanRepo } from "./scan.js";
 import { SETUP_HOST_IDS, hostSetupSnippet, type SetupHostId } from "./setup.js";
 
 // Claude truncates instructions at 2 KB; Codex wants the first 512 chars self-contained
 // (when to search / use this server). Lead with that, no tone/voice rules.
-export const SERVER_INSTRUCTIONS = `Search Yabgu when setting up coding-agent instruction files (AGENTS.md, CLAUDE.md, Cursor/Copilot/Gemini adapters, skills) or measuring their health. Local stdio only — does not control how you speak.
+export const SERVER_INSTRUCTIONS = `Search Yabgu when setting up coding-agent instruction files (AGENTS.md, host adapters, skills) or measuring their health. Local stdio only — does not control how you speak.
 
 Flow: yabgu_scan → yabgu_plan → show drafts → user approval → yabgu_apply. Optional yabgu_measure / yabgu_conflicts; yabgu_forge_skill for procedures→skills; yabgu_get_started / yabgu_host_setup / yabgu://; prompt yabgu_setup.
 
-Rules: AGENTS.md is source of truth; omit root to use the host workspace; apply writes only instruction paths (host UI confirm via elicitation when available, else confirmed=true); YABGU_READ_ONLY=1 hides apply; no overwrite of non-empty files unless asked; skills for multi-step procedures; keep AGENTS.md under ~200 lines.`;
+When showing measure/scan/plan: lead with the Best practices bullets for this repo now, then session gaps only — do not upsell other-host adapters. Rules: AGENTS.md is source of truth; omit root to use the host workspace; omit hosts to plan for this MCP session only (host ≠ model: Gemini-in-Cursor uses Cursor files, not GEMINI.md); apply writes only instruction paths (host UI confirm via elicitation when available, else confirmed=true); YABGU_READ_ONLY=1 hides apply; no overwrite of non-empty files unless asked; skills for multi-step procedures; keep AGENTS.md under ~200 lines.`;
 
 export const MAX_INSTRUCTIONS_BYTES = 2048;
 /** Codex: keep the first 512 characters self-contained. */
@@ -118,6 +119,14 @@ async function toolRoot(
   root: string | undefined,
 ): Promise<string> {
   return resolveProjectRoot(root, await listHostRoots(server));
+}
+
+function sessionFromServer(server: McpServer): HostSession {
+  const info = server.server.getClientVersion();
+  return resolveHostSession({
+    clientName: info?.name ?? null,
+    env: process.env,
+  });
 }
 
 function clientSupportsFormElicitation(server: McpServer): boolean {
@@ -315,9 +324,10 @@ export function createServer(opts: CreateServerOptions = {}): McpServer {
       },
     },
     async ({ root, hosts }) => {
+      const session = sessionFromServer(server);
       const hostList = hosts?.trim()
         ? hosts
-        : "cursor,codex,copilot,grok";
+        : session.host ?? "this MCP session only (omit hosts on yabgu_plan)";
       const rootLine = root?.trim()
         ? `Use root \`${root.trim()}\`.`
         : "Omit root so tools use the host workspace.";
@@ -331,9 +341,10 @@ export function createServer(opts: CreateServerOptions = {}): McpServer {
                 "Set up coding-agent instruction files for this repository with Yabgu.",
                 rootLine,
                 `Hosts: ${hostList}.`,
+                "Host ≠ model: a Gemini/Claude/GPT model inside Cursor still uses Cursor files. Do not create GEMINI.md unless hosts includes gemini (Gemini CLI). Do not create CLAUDE.md unless hosts includes claude.",
                 "1. Call yabgu_measure then yabgu_scan.",
-                "2. Call yabgu_plan with those hosts.",
-                "3. Show each proposed file and why it is needed. Do not write yet.",
+                "2. Call yabgu_plan. Omit hosts unless I named other tools.",
+                "3. Show results to me: (a) best practices that apply right now, (b) session facts only, (c) each proposed file and why — do not offer Copilot/Gemini/Claude unless those hosts were requested. Do not write yet. Surface plan warnings.",
                 "4. After I approve, call yabgu_apply (host UI may confirm; otherwise use confirmed=true).",
                 "5. Call yabgu_measure again and summarize before/after (score, missing files, tone hits).",
                 "Do not add tone/voice rules. Do not overwrite non-empty files unless I ask. Continue my original task afterward.",
@@ -434,7 +445,7 @@ export function createServer(opts: CreateServerOptions = {}): McpServer {
     {
       title: "Scan repo",
       description:
-        "When planning instruction files: local shallow scan (languages, package manager, scripts, existing instruction files). Does not upload or write.",
+        "When planning instruction files: local shallow scan. Summarize only this session's missing files — GEMINI.md is not a Cursor gap. Does not upload or write.",
       inputSchema: {
         root: rootSchema,
       },
@@ -442,7 +453,12 @@ export function createServer(opts: CreateServerOptions = {}): McpServer {
     },
     async ({ root }) => {
       try {
-        return jsonResult(scanRepo(await toolRoot(server, root)));
+        const abs = await toolRoot(server, root);
+        const scan = scanRepo(abs);
+        const session = sessionFromServer(server);
+        return textResult(
+          `${formatScanReport(scan, session)}\n\n\`\`\`json\n${JSON.stringify({ session, scan }, null, 2)}\n\`\`\``,
+        );
       } catch (err) {
         return toolError(err);
       }
@@ -454,21 +470,26 @@ export function createServer(opts: CreateServerOptions = {}): McpServer {
     {
       title: "Plan instruction files",
       description:
-        "When the repo has been scanned: propose only justified AGENTS.md/adapters with drafts. Does not write.",
+        "When the repo has been scanned: propose only this session's justified AGENTS.md/adapters with drafts. Omit hosts unless the user named other tools. Does not write.",
       inputSchema: {
         root: rootSchema,
         hosts: z
           .array(hostHintEnum)
           .optional()
-          .describe("Hosts to optimize for. Default: cursor,codex,copilot,grok."),
+          .describe(
+            "Hosts to optimize for. Omit to use this MCP session only. Do not add gemini unless the user uses Gemini CLI.",
+          ),
       },
       annotations: READ_ONLY,
     },
     async ({ root, hosts }) => {
       try {
         const scan = scanRepo(await toolRoot(server, root));
-        const plan = planFromScan(scan, hosts as HostHint[] | undefined);
-        return jsonResult({ scan, plan });
+        const session = sessionFromServer(server);
+        const plan = planFromScan(scan, hosts as HostHint[] | undefined, session);
+        return textResult(
+          `${formatPlanReport(plan, scan)}\n\n\`\`\`json\n${JSON.stringify({ session, scan, plan }, null, 2)}\n\`\`\``,
+        );
       } catch (err) {
         return toolError(err);
       }
@@ -563,9 +584,12 @@ export function createServer(opts: CreateServerOptions = {}): McpServer {
     },
     async ({ root }) => {
       try {
-        const report = measureRepo(await toolRoot(server, root));
+        const abs = await toolRoot(server, root);
+        const session = sessionFromServer(server);
+        const scan = scanRepo(abs);
+        const report = measureRepo(abs, scan, session);
         return textResult(
-          `${formatMeasureReport(report)}\n\n\`\`\`json\n${JSON.stringify(report, null, 2)}\n\`\`\``,
+          `${formatMeasureReport(report, session, scan)}\n\n\`\`\`json\n${JSON.stringify(report, null, 2)}\n\`\`\``,
         );
       } catch (err) {
         return toolError(err);

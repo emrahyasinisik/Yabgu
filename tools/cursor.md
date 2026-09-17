@@ -12,7 +12,7 @@ There are three layers for giving project instructions to the Cursor agent. Do n
 | User Rules (Settings) | Personal preference | Your style across all projects |
 | `.cursorrules` | No | Legacy single file; do not write in new projects |
 
-Cursor does not read `CLAUDE.md`.
+Cursor does not read `CLAUDE.md` or `GEMINI.md`. Using a Gemini (or Claude, GPT, Grok) **model** inside Cursor does not change that — those files are for other *hosts* (Gemini CLI, Claude Code), not for a model picker.
 
 ## AGENTS.md
 

@@ -2,6 +2,8 @@
 
 Default context file: **`GEMINI.md`**
 
+This is **Gemini CLI**, not “the Gemini model inside Cursor”. Cursor sessions should not create this file unless the team also uses Gemini CLI.
+
 ## Files to use
 
 | File | Scope |

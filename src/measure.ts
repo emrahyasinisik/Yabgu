@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { collectInstructionDocs } from "./instruction-files.js";
+import { classifyInstructionFiles, type HostSession } from "./hosts.js";
+import { PRESENT_TO_USER, bestPracticesFor } from "./report.js";
 import { scanRepo, type ScanResult } from "./scan.js";
 
 /** Heuristic phrases that look like tone / "how to talk" rules (out of scope for yabgu). */
@@ -55,7 +57,11 @@ function scoreFrom(report: Omit<MeasureReport, "score">): number {
  * Local before/after health check for instruction files.
  * No network. Numbers are heuristics — do not publish as “token savings”.
  */
-export function measureRepo(rootInput: string, scan?: ScanResult): MeasureReport {
+export function measureRepo(
+  rootInput: string,
+  scan?: ScanResult,
+  session?: HostSession,
+): MeasureReport {
   const root = resolve(rootInput);
   const s = scan ?? scanRepo(root);
 
@@ -81,9 +87,17 @@ export function measureRepo(rootInput: string, scan?: ScanResult): MeasureReport
   }
 
   const missingRecommended: string[] = [];
-  if (!hasAgentsMd || agentsEmpty) missingRecommended.push("AGENTS.md");
+  if (session) {
+    const classified = classifyInstructionFiles(s.instructionFiles, session);
+    missingRecommended.push(...classified.missingForSession);
+  } else if (!hasAgentsMd || agentsEmpty) {
+    missingRecommended.push("AGENTS.md");
+  }
 
-  const instructionFilesPresent = s.instructionFiles
+  const instructionFilesPresent = [
+    ...s.instructionFiles,
+    ...s.nestedInstructions,
+  ]
     .filter((f) => f.exists && !f.empty)
     .map((f) => f.path);
 
@@ -107,16 +121,38 @@ export function measureRepo(rootInput: string, scan?: ScanResult): MeasureReport
   return { ...partial, score: scoreFrom(partial) };
 }
 
-export function formatMeasureReport(report: MeasureReport): string {
+export function formatMeasureReport(
+  report: MeasureReport,
+  session?: HostSession,
+  scan?: ScanResult,
+): string {
+  const missingRoot = !report.hasAgentsMd || report.agentsEmpty;
+  const nestedPaths = report.instructionFilesPresent.filter(
+    (p) => p.includes("/") && /(^|\/)AGENTS\.md$/.test(p),
+  );
+  const practices = bestPracticesFor({
+    score: report.score,
+    missingRootAgents: missingRoot,
+    agentsLines: report.hasAgentsMd && !report.agentsEmpty ? report.agentsLines : undefined,
+    nestedPaths,
+    workspaces: scan?.workspaces.length ?? 0,
+    hasMakefile: scan?.hasMakefile ?? false,
+    makefileTargets: scan?.makefileTargets ?? [],
+    toneHits: report.toneRuleHits.length,
+    session: session ?? { clientName: null, host: null, source: "unknown", loadsNote: "", modelNote: "" },
+  });
   const lines = [
     `# Yabgu measure — ${report.root}`,
     "",
-    `Score: **${report.score}/100** (heuristic; not token savings)`,
+    practices,
+    "",
+    PRESENT_TO_USER,
     "",
     `| Check | Value |`,
     `| --- | --- |`,
     `| AGENTS.md | ${report.hasAgentsMd ? (report.agentsEmpty ? "empty" : `${report.agentsLines} lines`) : "missing"} |`,
     `| Adapters present | ${report.adapterFiles.length ? report.adapterFiles.join(", ") : "(none)"} |`,
+    `| Nested / other present | ${report.instructionFilesPresent.filter((p) => p !== "AGENTS.md" && !report.adapterFiles.includes(p)).join(", ") || "(none)"} |`,
     `| Tone-rule hits | ${report.toneRuleHits.length} |`,
     `| Missing recommended | ${report.missingRecommended.length ? report.missingRecommended.join(", ") : "(none)"} |`,
     "",

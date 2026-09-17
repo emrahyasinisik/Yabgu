@@ -56,7 +56,7 @@ Correct shape: thin `AGENTS.md` + thin adapters → [shared source of truth](doc
 
 | Tool | Prefer these | Optional / native | Usually does not load |
 | --- | --- | --- | --- |
-| **Cursor** | `AGENTS.md`, `.cursor/rules/*.mdc` | `.cursor/skills/*/SKILL.md` | `CLAUDE.md` |
+| **Cursor** | `AGENTS.md`, `.cursor/rules/*.mdc` | `.cursor/skills/*/SKILL.md` | `CLAUDE.md`, `GEMINI.md` |
 | **Claude Code** | `CLAUDE.md` or `.claude/CLAUDE.md` | `.claude/rules/`, skills, `CLAUDE.local.md` | `AGENTS.md` (not directly) |
 | **ChatGPT / Codex** | `AGENTS.md` | `AGENTS.override.md`, `~/.codex/AGENTS.md` | `CLAUDE.md` (not directly) |
 | **GitHub Copilot** | `.github/copilot-instructions.md`, `AGENTS.md` | `.github/instructions/*.instructions.md` | — |
@@ -139,6 +139,8 @@ Or see [docs/hosts.md](docs/hosts.md). First query: [docs/first-query.md](docs/f
 CLI extras: `npx @emrahyasinisik/yabgu measure <path>` · `conflicts` · `forge`
 
 ## Recommended layout
+
+Add adapters **only for hosts you use**. Cursor does not need `GEMINI.md`; Gemini CLI does not need `.cursor/rules`.
 
 ```text
 your-project/

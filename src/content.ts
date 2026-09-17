@@ -153,6 +153,7 @@ function indexSection(): string {
     "# Yabgu — Get Started",
     "",
     "Use this information to set up instruction files for the current project.",
+    "Plan for the MCP host you are in (Cursor vs Gemini CLI vs Claude Code). Host ≠ model: a Gemini model inside Cursor still does not load GEMINI.md.",
     "Prefer sectional calls when tokens matter: `yabgu_get_started` with section `writing`, `matrix`, or `shared`.",
     "Flow: `yabgu_scan` → `yabgu_plan` → show drafts → user approval → `yabgu_apply` (confirmed=true).",
     "Also: `yabgu_template`, `yabgu_host_guide`, `yabgu_host_setup`, `yabgu_measure`, resources `yabgu://…`, prompt `yabgu_setup`.",

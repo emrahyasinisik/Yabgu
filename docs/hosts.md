@@ -2,7 +2,9 @@
 
 Source: official URL on every row. No guessing. MCP install differs per host — `yabgu_host_setup` emits the snippet.
 
-Yabgu does not control speaking style. The MCP **proposes** native files; `apply` writes only after approval. Loading every turn remains the host’s job.
+Yabgu does not control speaking style. The MCP **proposes** native files for the **current host**; `apply` writes only after approval. Loading every turn remains the host’s job.
+
+**Host ≠ model.** Cursor with a Gemini model still uses Cursor files (`AGENTS.md`, `.cursor/rules`). `GEMINI.md` is Gemini CLI only.
 
 ## Native instructions (current catalog)
 
