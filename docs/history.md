@@ -5,18 +5,23 @@ Short timeline of what shipped on `main` before the public release. English summ
 ## Timeline
 
 ```mermaid
-timeline
-  title Yabgu on main
-  section 2026-09-16
-    Catalog : d48c63d Catalog of instruction files + templates
-    Rename  : 09982b3 Rename to yabgu + purpose
-    Research: 8049d2c Official host research · MCP stays local
-  section 2026-09-17
-    MCP     : c03e2e1 scan / plan / apply / measure
-    Catalog : 813043f Grok + templates + example before state
-    Hosts   : 76ea7fd Gemini / Windsurf / others guides
-    Tools   : 9ca3176 conflicts + forge_skill
+flowchart LR
+  subgraph d16 [2026-09-16]
+    C1[d48c63d catalog]
+    C2[09982b3 rename yabgu]
+    C3[8049d2c host research]
+  end
+  subgraph d17 [2026-09-17]
+    C4[c03e2e1 MCP core]
+    C5[813043f Grok templates]
+    C6[76ea7fd host guides]
+    C7[9ca3176 conflicts forge]
+    C8[08f828a English README]
+  end
+  C1 --> C2 --> C3 --> C4 --> C5 --> C6 --> C7 --> C8
 ```
+
+GitHub’s Mermaid build is picky about `timeline` diagrams and special characters in labels (`*`, `—`, `·`), so this history uses a plain flowchart instead.
 
 ## Commits (oldest → newest)
 
@@ -34,19 +39,19 @@ timeline
 
 ```mermaid
 flowchart TB
-  subgraph catalog [Catalog — always useful]
-    M[docs/matrix + tools/*]
-    T[templates/*]
-    W[docs/how-to-write]
+  subgraph catalog [Catalog]
+    M[matrix and tools guides]
+    T[templates]
+    W[how-to-write]
   end
-  subgraph mcp [Local MCP — stdio]
+  subgraph mcp [Local MCP stdio]
     S[scan]
     P[plan]
     A[apply after approval]
-    H[measure · conflicts · forge]
+    H[measure conflicts forge]
   end
-  subgraph host [Host IDE / CLI]
-    R[Loads AGENTS.md / adapters / skills]
+  subgraph host [Host IDE or CLI]
+    R[Loads AGENTS adapters skills]
   end
   catalog --> mcp
   mcp -->|writes instruction paths only| host
