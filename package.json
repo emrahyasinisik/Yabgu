@@ -21,7 +21,8 @@
     "test": "tsx --test test/**/*.test.ts",
     "measure": "tsx src/cli.ts measure",
     "example:setup": "tsx scripts/example-setup.ts",
-    "example:reset": "tsx scripts/example-reset.ts"
+    "example:reset": "tsx scripts/example-reset.ts",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

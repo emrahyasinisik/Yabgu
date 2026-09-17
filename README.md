@@ -70,11 +70,34 @@ Details: [docs/matrix.md](docs/matrix.md)
 
 ## Setup
 
-### 1) Catalog (works everywhere)
+### npm (recommended)
 
 ```bash
-# copy starters into your project
-cp templates/AGENTS.md /path/to/your-project/AGENTS.md
+npm install -g yabgu
+yabgu mcp
+# or without a global install:
+npx yabgu measure .
+npx yabgu conflicts .
+npx yabgu forge .
+```
+
+Requires Node.js 18+. After install, wire the MCP into your host with:
+
+```text
+yabgu_host_setup  →  host=cursor|claude|codex|copilot|…
+```
+
+### 1) Catalog only (no MCP)
+
+```bash
+git clone https://github.com/emrahyasinisik/Yabgu.git
+cp Yabgu/templates/AGENTS.md /path/to/your-project/AGENTS.md
+```
+
+Or after a global install, copy from the package:
+
+```bash
+cp "$(npm root -g)/yabgu/templates/AGENTS.md" /path/to/your-project/AGENTS.md
 ```
 
 1. [`templates/AGENTS.md`](templates/AGENTS.md) → repo root (Cursor, Codex, Copilot, Grok)
@@ -82,9 +105,11 @@ cp templates/AGENTS.md /path/to/your-project/AGENTS.md
 3. Cursor glob rules → [`templates/cursor/`](templates/cursor/)
 4. Copilot → [`templates/copilot/`](templates/copilot/)
 
-### 2) Local MCP
+### 2) Local MCP from source
 
 ```bash
+git clone https://github.com/emrahyasinisik/Yabgu.git
+cd Yabgu
 npm install
 npm run build
 npx yabgu mcp
