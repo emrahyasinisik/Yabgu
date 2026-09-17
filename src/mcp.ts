@@ -17,6 +17,8 @@ import {
   type TemplateId,
 } from "./content.js";
 import { formatMeasureReport, measureRepo } from "./measure.js";
+import { findConflicts, formatConflictReport } from "./conflicts.js";
+import { forgeSkill } from "./forge.js";
 import { planFromScan, type HostHint } from "./plan.js";
 import { isReadOnlyFromEnv } from "./policy.js";
 import {
@@ -31,7 +33,7 @@ import { SETUP_HOST_IDS, hostSetupSnippet, type SetupHostId } from "./setup.js";
 // (when to search / use this server). Lead with that, no tone/voice rules.
 export const SERVER_INSTRUCTIONS = `Search Yabgu when setting up coding-agent instruction files (AGENTS.md, CLAUDE.md, Cursor/Copilot/Gemini adapters, skills) or measuring their health. Local stdio only — does not control how you speak.
 
-Flow: yabgu_scan → yabgu_plan → show drafts → user approval → yabgu_apply. Optional yabgu_measure before/after; yabgu_get_started / yabgu_host_setup / yabgu:// resources; prompt yabgu_setup.
+Flow: yabgu_scan → yabgu_plan → show drafts → user approval → yabgu_apply. Optional yabgu_measure / yabgu_conflicts; yabgu_forge_skill for procedures→skills; yabgu_get_started / yabgu_host_setup / yabgu://; prompt yabgu_setup.
 
 Rules: AGENTS.md is source of truth; omit root to use the host workspace; apply writes only instruction paths (host UI confirm via elicitation when available, else confirmed=true); YABGU_READ_ONLY=1 hides apply; no overwrite of non-empty files unless asked; skills for multi-step procedures; keep AGENTS.md under ~200 lines.`;
 
@@ -565,6 +567,84 @@ export function createServer(opts: CreateServerOptions = {}): McpServer {
         return textResult(
           `${formatMeasureReport(report)}\n\n\`\`\`json\n${JSON.stringify(report, null, 2)}\n\`\`\``,
         );
+      } catch (err) {
+        return toolError(err);
+      }
+    },
+  );
+
+  server.registerTool(
+    "yabgu_conflicts",
+    {
+      title: "Conflict radar",
+      description:
+        "When instruction files may disagree: find opposing do/don't rules and mismatched test/lint commands across AGENTS.md and adapters. Local heuristic; does not write.",
+      inputSchema: {
+        root: rootSchema,
+      },
+      annotations: READ_ONLY,
+    },
+    async ({ root }) => {
+      try {
+        const report = findConflicts(await toolRoot(server, root));
+        return textResult(
+          `${formatConflictReport(report)}\n\n\`\`\`json\n${JSON.stringify(report, null, 2)}\n\`\`\``,
+        );
+      } catch (err) {
+        return toolError(err);
+      }
+    },
+  );
+
+  server.registerTool(
+    "yabgu_forge_skill",
+    {
+      title: "Skill forge",
+      description:
+        "When a multi-step procedure should leave always-on files: draft a SKILL.md from pasted/chat procedure text, or scan AGENTS/adapters for candidates. Does not write — show draft then yabgu_apply after approval.",
+      inputSchema: {
+        mode: z
+          .enum(["text", "agents"])
+          .describe(
+            "text = draft from procedure string; agents = find procedure blocks in always-on files (optional pick).",
+          ),
+        root: rootSchema,
+        procedure: z
+          .string()
+          .optional()
+          .describe("Required for mode=text: multi-step workflow from chat or paste."),
+        name: z.string().optional().describe("Skill folder slug / name."),
+        description: z
+          .string()
+          .optional()
+          .describe("Frontmatter description (when the agent should pick this skill)."),
+        host: z
+          .enum(["cursor", "claude"])
+          .optional()
+          .describe("Where to place the skill. Default cursor."),
+        pick: z
+          .string()
+          .optional()
+          .describe("mode=agents: candidate name/slug to draft."),
+      },
+      annotations: READ_ONLY,
+    },
+    async ({ mode, root, procedure, name, description, host, pick }) => {
+      try {
+        const abs =
+          mode === "agents" || root
+            ? await toolRoot(server, root)
+            : undefined;
+        const report = forgeSkill({
+          mode,
+          root: abs,
+          procedure,
+          name,
+          description,
+          host,
+          pick,
+        });
+        return jsonResult(report);
       } catch (err) {
         return toolError(err);
       }

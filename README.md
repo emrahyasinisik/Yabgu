@@ -99,6 +99,8 @@ veya [docs/hosts.md](docs/hosts.md). İlk sorgu: [docs/first-query.md](docs/firs
 | `yabgu_scan` / `yabgu_plan` | Yerel tarama + gerekçeli draft |
 | `yabgu_apply` | Yalnız onay sonrası yazar (elicitation veya `confirmed=true`) |
 | `yabgu_measure` | Setup health (before/after) — token iddiası değil |
+| `yabgu_conflicts` | Çelişen do/don't + farklı test/lint komutları |
+| `yabgu_forge_skill` | Prosedür → `SKILL.md` draft (yazmaz; apply sonra) |
 | `yabgu_get_started` / `yabgu_template` / `yabgu_host_*` | Rehber + şablon + kurulum |
 
 `YABGU_READ_ONLY=1` → `yabgu_apply` kapalı (Copilot cloud için).

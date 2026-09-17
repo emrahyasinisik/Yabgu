@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { findConflicts, formatConflictReport } from "./conflicts.js";
+import { forgeSkill } from "./forge.js";
 import { formatMeasureReport, measureRepo } from "./measure.js";
 import { startMcp } from "./mcp.js";
 
@@ -7,11 +9,13 @@ function printHelp(): void {
   console.log(`yabgu — short instruction files for coding agents
 
 Usage:
-  yabgu mcp              Start the MCP server on stdio
-  yabgu measure <path>   Local setup-health score (before/after)
-  yabgu help             Show this message
+  yabgu mcp                 Start the MCP server on stdio
+  yabgu measure <path>      Local setup-health score (before/after)
+  yabgu conflicts <path>    Opposing rules / mismatched commands
+  yabgu forge <path>        Find skill candidates in always-on files
+  yabgu help                Show this message
 
-MCP tools: get_started, template, host_guide, host_setup, scan, plan, apply, measure
+MCP tools: get_started, template, host_guide, host_setup, scan, plan, apply, measure, conflicts, forge_skill
 Resources: yabgu://template/{id}, yabgu://host/{id}, yabgu://doc/{writing|matrix|shared}
 Prompt: yabgu_setup
 
@@ -44,6 +48,30 @@ async function main(): Promise<void> {
     }
     const report = measureRepo(root);
     console.log(formatMeasureReport(report));
+    return;
+  }
+
+  if (cmd === "conflicts") {
+    const root = process.argv[3];
+    if (!root) {
+      console.error("Usage: yabgu conflicts <path>");
+      process.exit(1);
+    }
+    const report = findConflicts(root);
+    console.log(formatConflictReport(report));
+    return;
+  }
+
+  if (cmd === "forge") {
+    const root = process.argv[3];
+    if (!root) {
+      console.error(
+        "Usage: yabgu forge <path>  # scan always-on files for skill candidates",
+      );
+      process.exit(1);
+    }
+    const report = forgeSkill({ mode: "agents", root });
+    console.log(JSON.stringify(report, null, 2));
     return;
   }
 

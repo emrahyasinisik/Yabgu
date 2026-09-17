@@ -1,5 +1,6 @@
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { collectInstructionDocs } from "./instruction-files.js";
 import { scanRepo, type ScanResult } from "./scan.js";
 
 /** Heuristic phrases that look like tone / "how to talk" rules (out of scope for yabgu). */
@@ -39,41 +40,6 @@ function readIfFile(path: string): string | null {
   }
 }
 
-function collectMarkdownFiles(root: string): Array<{ rel: string; text: string }> {
-  const out: Array<{ rel: string; text: string }> = [];
-  const candidates = [
-    "AGENTS.md",
-    "CLAUDE.md",
-    "GEMINI.md",
-    ".github/copilot-instructions.md",
-  ];
-  for (const rel of candidates) {
-    const text = readIfFile(join(root, rel));
-    if (text != null) out.push({ rel, text });
-  }
-
-  const ruleDirs = [
-    ".cursor/rules",
-    ".claude/rules",
-    ".devin/rules",
-    ".windsurf/rules",
-  ];
-  for (const dir of ruleDirs) {
-    const abs = join(root, dir);
-    if (!existsSync(abs) || !statSync(abs).isDirectory()) continue;
-    try {
-      for (const name of readdirSync(abs)) {
-        if (!/\.(md|mdc)$/i.test(name)) continue;
-        const text = readIfFile(join(abs, name));
-        if (text != null) out.push({ rel: `${dir}/${name}`, text });
-      }
-    } catch {
-      /* ignore */
-    }
-  }
-  return out;
-}
-
 function scoreFrom(report: Omit<MeasureReport, "score">): number {
   let score = 0;
   if (report.hasAgentsMd && !report.agentsEmpty) score += 40;
@@ -107,7 +73,7 @@ export function measureRepo(rootInput: string, scan?: ScanResult): MeasureReport
   }
 
   const toneRuleHits: Array<{ file: string; match: string }> = [];
-  for (const { rel, text } of collectMarkdownFiles(root)) {
+  for (const { rel, text } of collectInstructionDocs(root)) {
     for (const re of TONE_PATTERNS) {
       const m = text.match(re);
       if (m) toneRuleHits.push({ file: rel, match: m[0] });

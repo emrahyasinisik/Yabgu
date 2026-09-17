@@ -87,6 +87,8 @@ describe("MCP harness", () => {
         "yabgu_scan",
         "yabgu_plan",
         "yabgu_measure",
+        "yabgu_conflicts",
+        "yabgu_forge_skill",
       ]) {
         assert.equal(byName[name]?.annotations?.readOnlyHint, true, name);
       }

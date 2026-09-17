@@ -14,6 +14,8 @@ MCP, native dosyaların yerini almaz. Dosyaları **önerir / onayla yazar**; her
 
 Ölçüm protokolü: [docs/measure.md](measure.md). Token tasarrufu iddiası ancak ayrı before/after ölçümle.
 
+Çelişki radarı + skill forge: [docs/conflicts-forge.md](conflicts-forge.md).
+
 ## Gizlilik (MCP)
 
 Ekleyen kişinin projesi **yalnızca kendi makinesinde** kalır. Yabgu’yu yazan / dağıtan kişi o repoyu göremez, çekemez, log’layamaz.

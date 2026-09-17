@@ -15,6 +15,8 @@ npm test
 npm run typecheck
 npx yabgu mcp
 npx yabgu measure <path>
+npx yabgu conflicts <path>
+npx yabgu forge <path>
 ```
 
 ## Layout

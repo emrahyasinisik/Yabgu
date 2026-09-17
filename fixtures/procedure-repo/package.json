@@ -1,0 +1,8 @@
+{
+  "name": "procedure-fixture",
+  "private": true,
+  "scripts": {
+    "test": "node -e \"console.log('ok')\"",
+    "build": "echo build"
+  }
+}
