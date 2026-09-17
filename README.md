@@ -37,7 +37,7 @@ flowchart LR
 
 > Local **stdio** MCP. Repo contents never go to a yabgu server. For Copilot cloud use `YABGU_READ_ONLY=1`.
 
-Project timeline: [docs/history.md](docs/history.md). Some deeper docs under `docs/` and `tools/` are still Turkish; templates stay English.
+Project timeline: [docs/history.md](docs/history.md).
 
 ## Why tokens drop and accuracy rises
 

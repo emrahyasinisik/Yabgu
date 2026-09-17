@@ -1,29 +1,29 @@
 # Windsurf / Cascade (Devin Desktop)
 
-Workspace kuralları markdown. Resmi: [Memories & Rules](https://docs.windsurf.com/windsurf/cascade/memories) (Devin Desktop docs).
+Workspace rules are markdown. Official: [Memories & Rules](https://docs.windsurf.com/windsurf/cascade/memories) (Devin Desktop docs).
 
-## Kullanılacak dosyalar
+## Files to use
 
-| Dosya | Durum |
+| File | Status |
 | --- | --- |
-| `.devin/rules/*.md` | **Tercih edilen** workspace rules |
-| `.windsurf/rules/*.md` | Legacy fallback (hâlâ okunur) |
-| `AGENTS.md` | Kök = always-on; alt dizin = o yol için glob |
-| `.windsurfrules` | Eski tek dosya; yeni projede yazma |
-| `~/.codeium/windsurf/memories/global_rules.md` | Global; her zaman açık; ~6 000 karakter |
+| `.devin/rules/*.md` | **Preferred** workspace rules |
+| `.windsurf/rules/*.md` | Legacy fallback (still read) |
+| `AGENTS.md` | Root = always-on; subdirectory = glob for that path |
+| `.windsurfrules` | Legacy single file; do not write in new projects |
+| `~/.codeium/windsurf/memories/global_rules.md` | Global; always on; ~6 000 characters |
 
-Workspace kuralı dosya başına ~12 000 karakter.
+Workspace rules are ~12 000 characters per file.
 
 ## Activation (`trigger` frontmatter)
 
-| `trigger` | Ne zaman yüklenir |
+| `trigger` | When it loads |
 | --- | --- |
-| `always_on` | Her mesaj |
-| `glob` | `globs:` eşleşince |
-| `model_decision` | Açıklama her zaman; içerik gerekince |
-| `manual` | `@rule-name` ile |
+| `always_on` | Every message |
+| `glob` | When `globs:` matches |
+| `model_decision` | Description always; content when needed |
+| `manual` | Via `@rule-name` |
 
-Örnek:
+Example:
 
 ```markdown
 ---
@@ -34,11 +34,11 @@ globs: **/*.test.ts
 Use describe/it; mock network at the boundary.
 ```
 
-Şablon: [`templates/windsurf/style.md`](../templates/windsurf/style.md) → `.devin/rules/style.md` (veya `.windsurf/rules/`).
+Template: [`templates/windsurf/style.md`](../templates/windsurf/style.md) → `.devin/rules/style.md` (or `.windsurf/rules/`).
 
-Paylaşılan komut / mimari yine `AGENTS.md`. Cascade kuralına yalnızca Windsurf’a özel not koy.
+Keep shared commands / architecture in `AGENTS.md`. Put only Windsurf-specific notes in Cascade rules.
 
-Claude Code `/init` (yeni init flag ile) `.windsurf/rules/` veya `.windsurfrules` okuyup `CLAUDE.md` üretebilir — tek seferlik kopya; sonra senkron tutulmaz.
+Claude Code `/init` (with the new init flag) can read `.windsurf/rules/` or `.windsurfrules` and generate `CLAUDE.md` — a one-time copy; it is not kept in sync afterward.
 
 ## MCP
 

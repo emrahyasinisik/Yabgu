@@ -1,22 +1,22 @@
 # Cursor
 
-Cursor ajanına proje talimatı vermek için üç katman var. Yeni projelerde `.cursorrules` kullanma.
+There are three layers for giving project instructions to the Cursor agent. Do not use `.cursorrules` in new projects.
 
-## Kullanılacak dosyalar
+## Files to use
 
-| Dosya | Zorunlu mu? | Ne işe yarar |
+| File | Required? | Purpose |
 | --- | --- | --- |
-| `AGENTS.md` | Küçük projelerde yeterli | Düz markdown, kök + alt klasörler |
-| `.cursor/rules/*.mdc` | Scoped kural gerekince | `alwaysApply`, `globs`, `description` |
-| `.cursor/skills/<ad>/SKILL.md` | Görev prosedürü gerekince | PR review, commit formatı, domain işi |
-| User Rules (Settings) | Kişisel tercih | Tüm projelerde senin stilin |
-| `.cursorrules` | Hayır | Eski tek dosya; yeni projede yazma |
+| `AGENTS.md` | Enough for small projects | Plain markdown, root + subfolders |
+| `.cursor/rules/*.mdc` | When you need scoped rules | `alwaysApply`, `globs`, `description` |
+| `.cursor/skills/<name>/SKILL.md` | When you need a task procedure | PR review, commit format, domain work |
+| User Rules (Settings) | Personal preference | Your style across all projects |
+| `.cursorrules` | No | Legacy single file; do not write in new projects |
 
-Cursor `CLAUDE.md` okumaz.
+Cursor does not read `CLAUDE.md`.
 
 ## AGENTS.md
 
-Kökte veya alt klasörde düz markdown:
+Plain markdown at the root or in a subfolder:
 
 ```text
 project/
@@ -25,17 +25,17 @@ project/
   backend/AGENTS.md
 ```
 
-Alt klasördeki dosya, o ağaçta çalışırken ebeveynle birleşir; daha spesifik olan öne çıkar.
+A file in a subfolder merges with its parents when you work in that tree; the more specific one takes precedence.
 
-İçerik: build komutları, test, stil, "yapma" listesi. Frontmatter yok.
+Content: build commands, tests, style, "do not" list. No frontmatter.
 
 ## `.cursor/rules/*.mdc`
 
-Düz `.md` bu klasörde **yok sayılır**. Uzantı `.mdc` olmalı ve YAML frontmatter şart.
+Plain `.md` in this folder is **ignored**. The extension must be `.mdc` and YAML frontmatter is required.
 
 ```markdown
 ---
-description: TypeScript kuralları
+description: TypeScript rules
 globs: **/*.{ts,tsx}
 alwaysApply: false
 ---
@@ -43,17 +43,17 @@ alwaysApply: false
 # TypeScript
 
 - strict mode
-- any yasak
+- no any
 ```
 
-| Mod | Frontmatter |
+| Mode | Frontmatter |
 | --- | --- |
-| Her sohbet | `alwaysApply: true` |
-| Dosya açıkken | `globs: **/*.ts` |
-| Model karar versin | `description: ...` + `alwaysApply: false` (glob yok) |
-| Elle `@kural` | description var, alwaysApply false |
+| Every chat | `alwaysApply: true` |
+| When a matching file is open | `globs: **/*.ts` |
+| Let the model decide | `description: ...` + `alwaysApply: false` (no glob) |
+| Manual `@rule` | description present, alwaysApply false |
 
-Şablonlar:
+Templates:
 
 - [`templates/cursor/always-apply.mdc`](../templates/cursor/always-apply.mdc)
 - [`templates/cursor/glob-rule.mdc`](../templates/cursor/glob-rule.mdc)
@@ -64,22 +64,22 @@ alwaysApply: false
 .cursor/skills/review-pr/SKILL.md
 ```
 
-Frontmatter'da `name` ve `description` yaz. Description, ajanın skill'i ne zaman seçeceğini belirler.
+Put `name` and `description` in the frontmatter. The description controls when the agent picks the skill.
 
-Kişisel skill: `~/.cursor/skills/<ad>/SKILL.md`  
-Proje skill: `.cursor/skills/<ad>/SKILL.md`
+Personal skill: `~/.cursor/skills/<name>/SKILL.md`  
+Project skill: `.cursor/skills/<name>/SKILL.md`
 
-Şablon: [`templates/skills/SKILL.md`](../templates/skills/SKILL.md)
+Template: [`templates/skills/SKILL.md`](../templates/skills/SKILL.md)
 
-## Ne yazılır, ne yazılmaz
+## What to write where
 
-- Her oturumda gereken 10 satır → `AGENTS.md` veya always-apply kural
-- Sadece React dosyalarında gereken kural → glob `.mdc`
-- 40 adımlık release checklist → skill
-- API anahtarı, local URL → User Rules veya gitignore'lı dosya
+- ~10 lines needed every session → `AGENTS.md` or an always-apply rule
+- Rule needed only in React files → glob `.mdc`
+- 40-step release checklist → skill
+- API keys, local URLs → User Rules or a gitignored file
 
-Ortak yazım: [how-to-write.md](../docs/how-to-write.md)
+Shared writing guidance: [how-to-write.md](../docs/how-to-write.md)
 
-## Kaynak
+## Source
 
 - https://cursor.com/docs/rules

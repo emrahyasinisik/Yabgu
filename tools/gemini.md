@@ -1,32 +1,32 @@
 # Gemini CLI
 
-Varsayılan context dosyası: **`GEMINI.md`**
+Default context file: **`GEMINI.md`**
 
-## Kullanılacak dosyalar
+## Files to use
 
-| Dosya | Kapsam |
+| File | Scope |
 | --- | --- |
-| `~/.gemini/GEMINI.md` | Tüm projeler |
+| `~/.gemini/GEMINI.md` | All projects |
 | `./GEMINI.md` | Repo |
-| `src/GEMINI.md` (ve diğer alt klasörler) | JIT / hiyerarşik |
-| `.gemini/settings.json` | Dosya adını `AGENTS.md` yapmak için |
+| `src/GEMINI.md` (and other subfolders) | JIT / hierarchical |
+| `.gemini/settings.json` | To use `AGENTS.md` as the filename |
 
-CLI bulunan dosyaları birleştirip her prompt'a ekler.
+The CLI merges found files and appends them to every prompt.
 
-Sıra (özet):
+Order (summary):
 
 1. Global `~/.gemini/GEMINI.md`
-2. Workspace ve ebeveyn klasörlerdeki `GEMINI.md`
-3. Araç bir dosyaya dokununca o ağaçtaki JIT `GEMINI.md`
+2. `GEMINI.md` in the workspace and parent folders
+3. JIT `GEMINI.md` in a tree when a tool touches a file there
 
-Kontrol: `/memory show`  
-Yenile: `/memory reload`
+Check: `/memory show`  
+Reload: `/memory reload`
 
-## AGENTS.md ile paylaşım
+## Sharing with AGENTS.md
 
-Gemini `@AGENTS.md` import'unu Claude gibi genişletmez. İki yol:
+Gemini does not expand `@AGENTS.md` imports the way Claude does. Two options:
 
-**A. Ayar (önerilen, tek kaynak)**
+**A. Settings (recommended, single source)**
 
 `.gemini/settings.json`:
 
@@ -38,14 +38,14 @@ Gemini `@AGENTS.md` import'unu Claude gibi genişletmez. İki yol:
 }
 ```
 
-**B. Kısa GEMINI.md**
+**B. Short GEMINI.md**
 
-Gemini'ye özel 10–20 satır yaz; ortak kuralları `AGENTS.md`'de bırak ve ekip üyelerine A yolunu söyle.
+Write 10–20 Gemini-specific lines; leave shared rules in `AGENTS.md` and tell the team to use path A.
 
-Şablonlar: [`templates/GEMINI.md`](../templates/GEMINI.md) · [`templates/gemini/settings.json`](../templates/gemini/settings.json)
+Templates: [`templates/GEMINI.md`](../templates/GEMINI.md) · [`templates/gemini/settings.json`](../templates/gemini/settings.json)
 
-Negatif kural yaz (“Do not…”). `@import` token düşürmez; düşürmek için sil veya alt klasöre taşı. [how-to-write.md](../docs/how-to-write.md)
+Write negative rules (“Do not…”). `@import` does not reduce tokens; to reduce, delete or move content to a subfolder. [how-to-write.md](../docs/how-to-write.md)
 
-## Kaynak
+## Source
 
 - https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/gemini-md.md

@@ -1,57 +1,57 @@
 # GitHub Copilot
 
-Copilot hem kendi native dosyalarını hem `AGENTS.md`'yi okur. Hangi yüzeyin ne okuduğu özellikten özelliğe değişir; repo kurulumunda ikisini birden bulundurmak en güvenlisi.
+Copilot reads both its native files and `AGENTS.md`. Which surface reads what varies by feature; keeping both in the repo setup is the safest approach.
 
-## Kullanılacak dosyalar
+## Files to use
 
-| Dosya | Kapsam |
+| File | Scope |
 | --- | --- |
-| `.github/copilot-instructions.md` | Repo geneli (Chat, review, coding agent, CLI) |
+| `.github/copilot-instructions.md` | Repo-wide (Chat, review, coding agent, CLI) |
 | `.github/instructions/**/*.instructions.md` | Path-specific (`applyTo` glob) |
-| `AGENTS.md` | Ajan talimatı (kök + nested) |
-| `CLAUDE.md` / `GEMINI.md` | Bazı Copilot yüzeyleri (CLI, coding agent, review) kök dosyayı da okur |
-| `~/.copilot/copilot-instructions.md` | Copilot CLI, kullanıcı geneli |
-| `~/.copilot/instructions/**/*.instructions.md` | Copilot CLI, modüler kişisel |
+| `AGENTS.md` | Agent instructions (root + nested) |
+| `CLAUDE.md` / `GEMINI.md` | Some Copilot surfaces (CLI, coding agent, review) also read the root file |
+| `~/.copilot/copilot-instructions.md` | Copilot CLI, user-wide |
+| `~/.copilot/instructions/**/*.instructions.md` | Copilot CLI, modular personal |
 
-## Repo geneli
+## Repo-wide
 
 ```markdown
 # Copilot instructions
 
 - Stack: ...
 - Test: `npm test`
-- PR: küçük diff, test ekle
+- PR: small diff, add tests
 ```
 
-Kısa tut. Uzun ortak kurallar `AGENTS.md`'de kalsın; bu dosyada Copilot'un her ipucunda ihtiyaç duyduğu özet dursun.
+Keep it short. Leave long shared rules in `AGENTS.md`; this file should hold the summary Copilot needs on every hint.
 
 ## Path-specific
 
-Dosya adı `*.instructions.md` ile bitmeli.
+The filename must end with `*.instructions.md`.
 
 ```markdown
 ---
 applyTo: "src/frontend/**/*.{ts,tsx}"
 ---
 
-Bu klasörde React Server Components kullan.
+Use React Server Components in this folder.
 ```
 
-İsteğe bağlı `excludeAgent`: `"code-review"` veya `"cloud-agent"`.
+Optional `excludeAgent`: `"code-review"` or `"cloud-agent"`.
 
-## AGENTS.md ile ilişki
+## Relationship to AGENTS.md
 
-Copilot nested `AGENTS.md` destekler; çalışma dizinine en yakın dosya öne çıkar. Cursor/Codex ile paylaşmak için kök `AGENTS.md` yeterli; Copilot Chat için ayrıca `.github/copilot-instructions.md` ekle.
+Copilot supports nested `AGENTS.md`; the file closest to the working directory takes precedence. A root `AGENTS.md` is enough to share with Cursor/Codex; also add `.github/copilot-instructions.md` for Copilot Chat.
 
-Copilot CLI, `AGENTS.md` / `CLAUDE.md` içinde `@relative/path` import genişletir. `GEMINI.md` ve `*.instructions.md` içinde genişletmez.
+Copilot CLI expands `@relative/path` imports inside `AGENTS.md` / `CLAUDE.md`. It does not expand them inside `GEMINI.md` or `*.instructions.md`.
 
 ## ChatGPT vs Copilot
 
-GitHub Copilot ≠ ChatGPT web. Copilot dosyaları GitHub/VS Code/CLI içindir. ChatGPT web bunları okumaz.
+GitHub Copilot ≠ ChatGPT web. Copilot files are for GitHub/VS Code/CLI. ChatGPT web does not read them.
 
-Kısa, çelişkisiz cümle yaz. Uzun ortak metni kopyalama. [how-to-write.md](../docs/how-to-write.md)
+Write short, non-conflicting sentences. Do not copy long shared text. [how-to-write.md](../docs/how-to-write.md)
 
-## Kaynak
+## Source
 
 - https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions
 - https://docs.github.com/en/copilot/reference/custom-instructions-support

@@ -1,42 +1,42 @@
 # Claude Code
 
-Claude Code oturum başında `CLAUDE.md` yükler. **`AGENTS.md` dosyasını kendiliğinden okumaz.**
+Claude Code loads `CLAUDE.md` at session start. **It does not read `AGENTS.md` on its own.**
 
-## Kullanılacak dosyalar
+## Files to use
 
-| Dosya | Kapsam | Commit? |
+| File | Scope | Commit? |
 | --- | --- | --- |
-| `./CLAUDE.md` veya `./.claude/CLAUDE.md` | Proje (takım) | Evet |
-| `./CLAUDE.local.md` | Bu makine + bu repo | Hayır |
-| `~/.claude/CLAUDE.md` | Tüm projelerin, sadece sen | Hayır (home) |
-| `.claude/rules/*.md` | Konu veya path-scoped kurallar | Evet |
-| `.claude/skills/<ad>/SKILL.md` | Görev skill'i | Evet |
-| Nested `CLAUDE.md` (alt klasör) | O klasördeki iş | Evet |
+| `./CLAUDE.md` or `./.claude/CLAUDE.md` | Project (team) | Yes |
+| `./CLAUDE.local.md` | This machine + this repo | No |
+| `~/.claude/CLAUDE.md` | All projects, you only | No (home) |
+| `.claude/rules/*.md` | Topic or path-scoped rules | Yes |
+| `.claude/skills/<name>/SKILL.md` | Task skill | Yes |
+| Nested `CLAUDE.md` (subfolder) | Work in that folder | Yes |
 
-Managed / org dosyası da vardır (IT politikası); normal projede gerekmez.
+Managed / org files also exist (IT policy); not needed for a normal project.
 
-## Claude + AGENTS.md köprüsü
+## Claude + AGENTS.md bridge
 
-Diğer ajanlarla paylaşmak için `CLAUDE.md`:
+To share with other agents, put this in `CLAUDE.md`:
 
 ```markdown
 @AGENTS.md
 
 ## Claude Code
 
-Büyük değişikliklerde önce plan mode.
+Use plan mode first for large changes.
 ```
 
-`@path` import'ları oturum başında genişler (en fazla 4 hop). Windows'ta symlink yerine import kullan.
+`@path` imports expand at session start (up to 4 hops). On Windows, use imports instead of symlinks.
 
-`/init` mevcut Cursor / Copilot kurallarından `CLAUDE.md` üretebilir. `CLAUDE_CODE_NEW_INIT=1` ile `AGENTS.md`, Windsurf, Cline, Devin kurallarını da okur.
+`/init` can generate `CLAUDE.md` from existing Cursor / Copilot rules. With `CLAUDE_CODE_NEW_INIT=1` it also reads `AGENTS.md`, Windsurf, Cline, and Devin rules.
 
-## Yazım
+## Writing
 
-- Hedef: dosya başına ~200 satır
-- Somut ol: "2 space indent", "`npm test` commit öncesi"
-- Çelişen kural bırakma
-- HTML yorumları (`<!-- -->`) Claude context'ine girmez; insan notu için kullan
+- Target: ~200 lines per file
+- Be concrete: "2 space indent", "`npm test` before commit"
+- Do not leave conflicting rules
+- HTML comments (`<!-- -->`) do not enter Claude context; use them for human notes
 
 ## `.claude/rules/`
 
@@ -45,9 +45,9 @@ Büyük değişikliklerde önce plan mode.
 .claude/rules/frontend/react.md
 ```
 
-Tüm `.md` dosyaları recursive bulunur. Path-scoped kural için dosya başında frontmatter (Claude sürümüne göre `paths` / globs) kullan; ayrıntı için güncel memory dokümanına bak.
+All `.md` files are found recursively. For path-scoped rules, put frontmatter at the top of the file (`paths` / globs depending on Claude version); see the current memory docs for details.
 
-Uzun, her seferinde gerekmeyen prosedürleri kural değil skill yap.
+Make long procedures that are not needed every time into skills, not rules.
 
 ## Skills
 
@@ -55,19 +55,19 @@ Uzun, her seferinde gerekmeyen prosedürleri kural değil skill yap.
 .claude/skills/deploy/SKILL.md
 ```
 
-Skill, kuraldan farklıdır: her oturuma gömülmez, ilgili görevde yüklenir.
+A skill differs from a rule: it is not embedded in every session; it loads for the relevant task.
 
 ## Auto memory
 
-Claude kendi düzeltmelerinden not biriktirir. Sen yazmazsın. Zorunlu "her zaman yap" kurallarını yine `CLAUDE.md` veya rule dosyasına koy; memory bağlamdır, kilit değil.
+Claude accumulates notes from its own corrections. You do not write these. Put mandatory "always do this" rules in `CLAUDE.md` or a rule file anyway; memory is context, not a lock.
 
-## Kontrol
+## Check
 
-Oturumda `/context` → Memory files listesinde `CLAUDE.md` görünmeli.
+In a session, `/context` → Memory files should list `CLAUDE.md`.
 
-Yazım (200 satır, somut kural, hook = kilit): [how-to-write.md](../docs/how-to-write.md)
+Writing (200 lines, concrete rules, hook = lock): [how-to-write.md](../docs/how-to-write.md)
 
-## Kaynak
+## Source
 
 - https://code.claude.com/docs/en/memory
 - https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more

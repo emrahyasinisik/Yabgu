@@ -1,66 +1,66 @@
 # ChatGPT / Codex
 
-"ChatGPT için hangi md?" sorusunun cevabı **hangi ürüne** baktığına göre değişir.
+The answer to "which md for ChatGPT?" depends on **which product** you mean.
 
 ## Codex (ChatGPT coding agent / Codex CLI)
 
-Repoda otomatik okunan dosya: **`AGENTS.md`**
+File read automatically in the repo: **`AGENTS.md`**
 
-| Dosya | Nerede | Ne zaman |
+| File | Where | When |
 | --- | --- | --- |
-| `AGENTS.md` | Repo kökü ve alt klasörler | Her çalışmada |
-| `AGENTS.override.md` | Aynı dizin, `AGENTS.md`'den önce tercih edilir | Yerel ezme |
-| `~/.codex/AGENTS.md` | Kullanıcı home | Tüm projeler |
-| `~/.codex/AGENTS.override.md` | Home, varsa `AGENTS.md` yerine | Global ezme |
+| `AGENTS.md` | Repo root and subfolders | Every run |
+| `AGENTS.override.md` | Same directory; preferred over `AGENTS.md` | Local override |
+| `~/.codex/AGENTS.md` | User home | All projects |
+| `~/.codex/AGENTS.override.md` | Home; replaces `AGENTS.md` if present | Global override |
 
-Keşif sırası (özet):
+Discovery order (summary):
 
-1. Global: `~/.codex/AGENTS.override.md` yoksa `~/.codex/AGENTS.md`
-2. Git kökünden çalışma dizinine doğru her klasörde: `AGENTS.override.md` → `AGENTS.md` → ayarlı fallback isimleri
-3. Klasör başına en fazla bir dosya
-4. Kökten aşağı birleştirilir; alta yakın olan sonra gelir
-5. Varsayılan birleşik limit ~32 KiB (`project_doc_max_bytes`)
+1. Global: `~/.codex/AGENTS.override.md`, else `~/.codex/AGENTS.md`
+2. From git root toward the working directory, in each folder: `AGENTS.override.md` → `AGENTS.md` → configured fallback names
+3. At most one file per folder
+4. Merged from root downward; closer to the leaf comes later
+5. Default combined limit ~32 KiB (`project_doc_max_bytes`)
 
-`CLAUDE.md` varsayılan listede yoktur. İstersen `~/.codex/config.toml` içinde **üst seviyede**:
+`CLAUDE.md` is not on the default list. If you want it, set this at the **top level** of `~/.codex/config.toml`:
 
 ```toml
 project_doc_fallback_filenames = ["CLAUDE.md"]
 ```
 
-Bu, `AGENTS.md` olmayan klasörlerde `CLAUDE.md`'yi yedek aday yapar. `[project]` altına koymak çalışmaz. Paylaşılan kurulum için yine `AGENTS.md` + Claude tarafında `@AGENTS.md` daha güvenilir.
+That makes `CLAUDE.md` a fallback candidate in folders without `AGENTS.md`. Putting it under `[project]` does not work. For a shared setup, `AGENTS.md` plus `@AGENTS.md` on the Claude side is more reliable.
 
 ## ChatGPT web (chatgpt.com)
 
-Repodaki markdown **otomatik yüklenmez**.
+Markdown in the repo is **not loaded automatically**.
 
-| İhtiyaç | Nerede yaz |
+| Need | Where to write |
 | --- | --- |
-| Tüm sohbetler | Settings → Personalization → Custom instructions |
-| Bir proje | ChatGPT Project → Instructions |
-| Tek bir GPT | GPT builder → Instructions |
-| Kod tabanında ajan | Codex + `AGENTS.md` |
+| All chats | Settings → Personalization → Custom instructions |
+| One project | ChatGPT Project → Instructions |
+| A single GPT | GPT builder → Instructions |
+| Agent on a codebase | Codex + `AGENTS.md` |
 
-Web için "md dosyası" yok; metin ayar alanıdır. Aynı içeriği `AGENTS.md`'den kopyalayabilirsin ama senkron otomatik değildir.
+There is no "md file" for the web; it is a text settings field. You can copy the same content from `AGENTS.md`, but sync is not automatic.
 
 ## Custom GPT / Assistants API
 
-Talimat GPT'nin Instructions alanında durur. İsteğe bağlı Knowledge olarak `.md` yükleyebilirsin; bu, Cursor/Claude'daki otomatik proje belleği değildir.
+Instructions live in the GPT's Instructions field. You can optionally upload `.md` as Knowledge; that is not the same as automatic project memory in Cursor/Claude.
 
-## Ne yaz
+## What to write
 
-`AGENTS.md` için:
+For `AGENTS.md`:
 
-- Kurulum ve test komutları
-- Repo haritası
-- Stil
-- Güvenlik sınırları
-- "Bitirmeden önce şunu çalıştır"
+- Setup and test commands
+- Repo map
+- Style
+- Security boundaries
+- "Run this before finishing"
 
-Şablon: [`templates/AGENTS.md`](../templates/AGENTS.md)
+Template: [`templates/AGENTS.md`](../templates/AGENTS.md)
 
-Codex birleşik talimatı ~32 KiB’de keser. Kritik kuralı dosyanın üstüne ve iç içe klasöre koy. Ayrıntı: [how-to-write.md](../docs/how-to-write.md)
+Codex truncates the combined instructions at ~32 KiB. Put critical rules at the top of the file and in nested folders. Details: [how-to-write.md](../docs/how-to-write.md)
 
-## Kaynak
+## Source
 
 - https://developers.openai.com/codex/guides/agents-md
 - https://agents.md/

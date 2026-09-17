@@ -1,81 +1,81 @@
-# Tek kaynak: AGENTS.md + adaptörler
+# Single source of truth: AGENTS.md + adapters
 
-Amaç daha az token ve daha doğru ajan: aynı kuralı üç dosyaya yapıştırma. Bir `AGENTS.md` yaz, diğer araçları ona bağla. Her kopya hem bağlamı şişirir hem çelişince yanlış kod üretir.
+Goal: fewer tokens and a more accurate agent. Don’t paste the same rule into three files. Write one `AGENTS.md` and bridge other tools to it. Every copy both bloats context and produces wrong code when copies conflict.
 
-## 1. Ortak dosyayı yaz
+## 1. Write the shared file
 
-Kökte `AGENTS.md` oluştur. Şablon: [`templates/AGENTS.md`](../templates/AGENTS.md)
+Create root `AGENTS.md`. Template: [`templates/AGENTS.md`](../templates/AGENTS.md)
 
-İçine koy (kodun söylemediği şeyler):
+Put in (what code doesn’t say):
 
-- Proje özeti (2–4 cümle)
-- Kurulum / çalıştırma / test komutları — tam, çalıştırılabilir
-- Stil ve mimari: somut, “yapma” listesi
-- PR / commit beklentileri
+- Project overview (2–4 sentences)
+- Install / run / test commands — full and runnable
+- Style and architecture: concrete “do not” list
+- PR / commit expectations
 
-İçine koyma:
+Leave out:
 
-- Uzun prosedürler → `SKILL.md`
-- Lint’in zaten yakaladığı format
-- Tek bir araca özel UI/mod notları → native dosya
-- Kişisel sandbox URL'leri → `*.local.md` / `AGENTS.override.md`
+- Long procedures → `SKILL.md`
+- Formatting the linter already catches
+- Tool-specific UI/mode notes → native file
+- Personal sandbox URLs → `*.local.md` / `AGENTS.override.md`
 
-Yazım: her satır bir hatayı önlemeli; kalkınca bir şey bozulmuyorsa sil. Ayrıntı: [how-to-write.md](how-to-write.md)
+Writing bar: each line should prevent a real mistake; if deleting it changes nothing, delete it. Details: [how-to-write.md](how-to-write.md)
 
 ## 2. Claude Code
 
-Claude `AGENTS.md`'yi kendiliğinden okumaz. Kökte:
+Claude does not read `AGENTS.md` on its own. At the root:
 
 ```markdown
 @AGENTS.md
 
 ## Claude Code
 
-Plan mode kullan: büyük refaktörlerde önce plan.
+Use plan mode for large refactors.
 ```
 
-Windows'ta symlink yerine `@AGENTS.md` import kullan.
+On Windows prefer `@AGENTS.md` import over a symlink.
 
 ## 3. Cursor
 
-Cursor hem `AGENTS.md` hem `.cursor/rules/*.mdc` okur.
+Cursor reads both `AGENTS.md` and `.cursor/rules/*.mdc`.
 
-- Genel kurallar → `AGENTS.md`
-- "Sadece `**/*.ts` açıkken" gibi scoped kurallar → `.mdc`
-- Eski `.cursorrules` kullanma; yeni projede `.cursor/rules/`
+- Shared rules → `AGENTS.md`
+- “Only when `**/*.ts` is open” scoped rules → `.mdc`
+- Don’t use legacy `.cursorrules`; use `.cursor/rules/` on new projects
 
 ## 4. Codex / ChatGPT coding agent
 
-Başka dosya gerekmez. `AGENTS.md` yeter.
+No extra file required. `AGENTS.md` is enough.
 
-Yerel ezme için (commit etme):
+Local override (do not commit):
 
 ```text
 AGENTS.override.md
 ```
 
-veya global:
+or global:
 
 ```text
 ~/.codex/AGENTS.md
 ```
 
-ChatGPT **web** sohbeti repo dosyasını okumaz → [`templates/chatgpt/web-instructions.md`](../templates/chatgpt/web-instructions.md).
+ChatGPT **web** chat does not read the repo file → [`templates/chatgpt/web-instructions.md`](../templates/chatgpt/web-instructions.md).
 
 ## 5. Copilot
 
-İki katman kullan:
+Use two layers:
 
-1. `AGENTS.md` — ajan talimatı
-2. `.github/copilot-instructions.md` — kısa repo özeti (Copilot Chat / review)
+1. `AGENTS.md` — agent instructions
+2. `.github/copilot-instructions.md` — short repo summary (Copilot Chat / review)
 
-Path-specific için `.github/instructions/*.instructions.md` ve `applyTo` frontmatter.
+For path-specific rules: `.github/instructions/*.instructions.md` with `applyTo` frontmatter.
 
 ## 6. Gemini CLI
 
-`GEMINI.md` yaz. Gemini `@` import genişletmez; ya içeriği kopyala ya da ayarla.
+Write `GEMINI.md`. Gemini does not expand `@` imports; copy content or set config.
 
-Şablon ayar: [`templates/gemini/settings.json`](../templates/gemini/settings.json) → `.gemini/settings.json`:
+Settings template: [`templates/gemini/settings.json`](../templates/gemini/settings.json) → `.gemini/settings.json`:
 
 ```json
 {
@@ -85,23 +85,23 @@ Path-specific için `.github/instructions/*.instructions.md` ve `applyTo` frontm
 }
 ```
 
-İnce adaptör: [`templates/GEMINI.md`](../templates/GEMINI.md)
+Thin adapter: [`templates/GEMINI.md`](../templates/GEMINI.md)
 
 ## 7. Grok Build
 
-Kök `AGENTS.md` yeter. Skills / hooks ayrı. Doğrulama: `grok inspect`. Rehber: [`tools/grok.md`](../tools/grok.md).
+Root `AGENTS.md` is enough. Skills / hooks are separate. Verify with `grok inspect`. Guide: [`tools/grok.md`](../tools/grok.md).
 
 ## 8. Windsurf / Cascade
 
-`AGENTS.md` + isteğe bağlı `.devin/rules/*.md` (eski: `.windsurf/rules/`). Ortak kuralları kopyalama. Rehber: [`tools/windsurf.md`](../tools/windsurf.md).
+`AGENTS.md` + optional `.devin/rules/*.md` (legacy: `.windsurf/rules/`). Don’t duplicate shared rules. Guide: [`tools/windsurf.md`](../tools/windsurf.md).
 
 ## 9. Cline / Roo
 
-`AGENTS.md` + ince `.clinerules` (veya `.clinerules/`). Şablon: [`templates/cline/clinerules.md`](../templates/cline/clinerules.md).
+`AGENTS.md` + thin `.clinerules` (or `.clinerules/`). Template: [`templates/cline/clinerules.md`](../templates/cline/clinerules.md).
 
 ## 10. Gitignore
 
-Kişisel dosyaları commit etme:
+Don’t commit personal files:
 
 ```gitignore
 CLAUDE.local.md
@@ -109,16 +109,16 @@ AGENTS.override.md
 *.local.md
 ```
 
-## Kontrol listesi
+## Checklist
 
-Yeni bir projede:
+On a new project:
 
-- [ ] `AGENTS.md` var
-- [ ] Claude kullanılıyorsa `CLAUDE.md` `@AGENTS.md` ile başlıyor
-- [ ] Cursor scoped kural ihtiyacı varsa `.cursor/rules/`
-- [ ] Copilot kullanılıyorsa `.github/copilot-instructions.md`
-- [ ] Gemini kullanılıyorsa `GEMINI.md` ve/veya `.gemini/settings.json`
-- [ ] Grok kullanılıyorsa `AGENTS.md` (+ isteğe bağlı skill); `grok inspect` ile doğrula
-- [ ] Windsurf kullanılıyorsa `.devin/rules/` veya `AGENTS.md` yeterli mi net
-- [ ] Cline kullanılıyorsa `.clinerules` ince tutuluyor
-- [ ] Local override dosyaları `.gitignore`'da
+- [ ] `AGENTS.md` exists
+- [ ] If Claude is used, `CLAUDE.md` starts with `@AGENTS.md`
+- [ ] If Cursor needs scoped rules, `.cursor/rules/` exists
+- [ ] If Copilot is used, `.github/copilot-instructions.md` exists
+- [ ] If Gemini is used, `GEMINI.md` and/or `.gemini/settings.json`
+- [ ] If Grok is used, `AGENTS.md` (+ optional skill); verify with `grok inspect`
+- [ ] If Windsurf is used, `.devin/rules/` or confirm `AGENTS.md` alone is enough
+- [ ] If Cline is used, `.clinerules` stays thin
+- [ ] Local override files are in `.gitignore`

@@ -1,39 +1,39 @@
 # Grok Build
 
-Grok Build kök `AGENTS.md` okur. Ayrı bir `GROK.md` gerekmez.
+Grok Build reads root `AGENTS.md`. A separate `GROK.md` is not required.
 
-## Kullanılacak dosyalar
+## Files to use
 
-| Dosya | Not |
+| File | Note |
 | --- | --- |
-| `AGENTS.md` | Proje talimatı (birincil) |
-| Skills | Görev prosedürü; her tura girmez |
-| Hooks | Zorunlu yasak / otomatik kontrol |
-| `~/.grok/config.toml` | Kullanıcı MCP / model / plugin |
-| `.grok/config.toml` | Proje MCP / plugin / permission (talimat değil) |
+| `AGENTS.md` | Project instructions (primary) |
+| Skills | Task procedures; not injected every turn |
+| Hooks | Hard bans / automated checks |
+| `~/.grok/config.toml` | User MCP / model / plugin |
+| `.grok/config.toml` | Project MCP / plugin / permission (not instructions) |
 
-Yüklü talimat, skill, hook ve MCP’yi görmek için:
+To inspect loaded instructions, skills, hooks, and MCP:
 
 ```bash
 grok inspect
 ```
 
-Büyük değişikliklerde plan mode kullan. Yazım: kısa, komut, yasak — [how-to-write.md](../docs/how-to-write.md).
+Use plan mode for large changes. Writing: short, commands, bans — [how-to-write.md](../docs/how-to-write.md).
 
-## AGENTS.md ile paylaşım
+## Sharing with AGENTS.md
 
-Cursor / Codex / Copilot ile aynı `AGENTS.md` yeter. Claude kullanıyorsan ayrıca ince `CLAUDE.md` (`@AGENTS.md`); Grok onu okumaz.
+The same `AGENTS.md` as Cursor / Codex / Copilot is enough. If you use Claude, also keep a thin `CLAUDE.md` (`@AGENTS.md`); Grok does not read it.
 
-Uzun prosedürleri `AGENTS.md`’ye gömme → skill. Konuşma tonu yazma (Yabgu kapsamı dışı).
+Do not embed long procedures in `AGENTS.md` → use a skill. Do not write conversation tone (out of Yabgu scope).
 
 ## MCP
 
-Kurulum snippet: `yabgu_host_setup` host=`grok`.  
-Resmi: [MCP servers](https://docs.x.ai/build/features/mcp-servers) · [Grok Build](https://docs.x.ai/build/overview)
+Setup snippet: `yabgu_host_setup` host=`grok`.  
+Official: [MCP servers](https://docs.x.ai/build/features/mcp-servers) · [Grok Build](https://docs.x.ai/build/overview)
 
-Grok ayrıca `~/.claude.json`, `.cursor/mcp.json`, proje `.mcp.json` okuyabilir (compat; kapatılabilir). `npx` soğuk açılışta `startup_timeout_sec` yükselt.
+Grok can also read `~/.claude.json`, `.cursor/mcp.json`, and project `.mcp.json` (compat; can be disabled). Raise `startup_timeout_sec` for cold `npx` starts.
 
-## Kaynak
+## Source
 
 - https://docs.x.ai/build/overview
 - https://docs.x.ai/build/features/mcp-servers

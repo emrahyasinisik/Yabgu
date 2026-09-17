@@ -1,6 +1,6 @@
 {
   "name": "@emrahyasinisik/yabgu",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Short instruction files for coding agents — catalog, templates, and a local stdio MCP (scan/plan/apply/measure/conflicts/forge)",
   "type": "module",
   "bin": {

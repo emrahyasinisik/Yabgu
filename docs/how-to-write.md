@@ -1,92 +1,92 @@
-# Modeller talimatı nasıl ister
+# How models want instructions written
 
-Kaynak: Anthropic Claude Code, OpenAI Codex, Google Gemini CLI, GitHub Copilot, Cursor, Grok Build, [agents.md](https://agents.md/). Hepsi aynı çekirdeği söylüyor; dosya adı değişiyor.
+Sources: Anthropic Claude Code, OpenAI Codex, Google Gemini CLI, GitHub Copilot, Cursor, Grok Build, [agents.md](https://agents.md/). Same core advice; file names differ.
 
-Yabgu’nun işi bu çekirdeği `AGENTS.md`’ye yazmak, kopyalamamak, şişirmemek.
+Yabgu’s job is to put that core into `AGENTS.md` — not copy-paste it everywhere or bloat it.
 
-## Ortak çekirdek (hepsi)
+## Shared core (everyone)
 
-| Kural | Neden | Kim söylüyor |
+| Rule | Why | Who says so |
 | --- | --- | --- |
-| Kısa tut | Her satır her turda token yer. Uzun dosya **daha az** uyulur. | Claude: ~200 satır. Codex: varsayılan **32 KiB** birleşik tavan. Copilot: her mesajla gider. Gemini: “her satır kira öder.” |
-| Somut ve doğrulanabilir yaz | “Düzgün formatla” işe yaramaz. | Claude: `2 space`, `npm test` commit öncesi. |
-| Yasakları açık yaz | Olumsuz kural, belirsiz olumludan daha iyi tutulur. | Gemini resmi: “Do not use class components.” |
-| Koddan çıkanı yazma | TypeScript kullandığını `.ts` zaten söyler. | Gemini / localskills özeti |
-| Silme testi | Bu satır kalkınca ajan hata yapar mı? Hayırsa kes. | Anthropic: şişik CLAUDE.md talimatı **yoksayar** |
-| Çelişki bırakma | Model birini rastgele seçer. | Claude, Copilot, agents.md |
-| Prosedürü her tura koyma | 30 satırlık runbook skill’dir, bellek dosyası değil. | Anthropic steering |
-| “Asla”yı metinle kilitleme | Metin tavsiyedir. Gerçek kilit: hook, permission, CI. | Claude: CLAUDE.md ≠ enforcement |
-| Komutu tam yaz | Ajan listelenen testi **çalıştırmaya** çalışır. | agents.md, Codex örnekleri |
-| Neden’i bir cümle söyle | Kısıtın gerekçesi uyumu artırır. | Anthropic prompting |
+| Keep it short | Every line costs tokens every turn. Long files are **followed less**. | Claude: ~200 lines. Codex: default **32 KiB** combined ceiling. Copilot: sent with every message. Gemini: “every line pays rent.” |
+| Write concrete, checkable rules | “Format cleanly” does nothing. | Claude: `2 space`, `npm test` before commit. |
+| Spell out bans | Negative rules stick better than vague positives. | Gemini official: “Do not use class components.” |
+| Don’t restate what code already says | `.ts` already means TypeScript. | Gemini / localskills summaries |
+| Deletion test | If removing the line wouldn’t make the agent fail, cut it. | Anthropic: bloated CLAUDE.md instructions are **ignored** |
+| Leave no conflicts | The model picks one side at random. | Claude, Copilot, agents.md |
+| Don’t put procedures in every turn | A 30-line runbook is a skill, not memory. | Anthropic steering |
+| Don’t enforce “never” with text alone | Text advises. Real locks: hooks, permissions, CI. | Claude: CLAUDE.md ≠ enforcement |
+| Write full commands | Agents will try to **run** listed tests. | agents.md, Codex examples |
+| Say why in one sentence | A reason increases compliance. | Anthropic prompting |
 
-## Ne yazılır (agents.md + vendor örnekleri)
+## What belongs in the root file (agents.md + vendor examples)
 
-Kök dosyada bunlar durur:
+Keep at the root:
 
-- 2–4 cümle proje özeti (kodun söylemediği kararlar)
-- Install / start / test / lint — kopyalanabilir komut
-- Stil: formatter, naming, “bu repoda şöyle”
-- Test: ne zaman, tek testi nasıl koşarsın
-- Güvenlik: secret, `.env`, dokunulmayacak yollar
-- PR: küçük diff, CI yeşil
+- 2–4 sentence project overview (decisions code doesn’t show)
+- Install / start / test / lint — copy-pasteable commands
+- Style and architecture: concrete, with a “do not” list
+- Testing: when, how to run a single test
+- Security: secrets, `.env`, untouchable paths
+- PRs: small diffs, green CI
 
-Kökte durmaz:
+Leave out of the root:
 
-- README kopyası
-- Framework dersi (“React nedir”)
-- Lint’in zaten yakaladığı format
-- Deploy runbook, release checklist → skill
-- “İyi kod yaz” gibi boş cümle
+- README copies
+- Framework tutorials (“what is React”)
+- Formatting the linter already catches
+- Deploy runbooks, release checklists → skill
+- Empty lines like “write good code”
 
-## Araç farkları (yazarken)
+## Tool differences (when writing)
 
 **Claude (Opus / Sonnet, Claude Code)**  
-`CLAUDE.md` bağlamdır, kilit değil. ~200 satır. `@AGENTS.md` ile paylaş. Plan mode büyük işte. Hook = zorunlu yasak. Alt klasör `CLAUDE.md` ancak o ağaca girince yüklenir (token tasarrufu).
+`CLAUDE.md` is context, not a lock. ~200 lines. Share via `@AGENTS.md`. Use plan mode for large work. Hooks = hard bans. Nested `CLAUDE.md` loads only when that tree is entered (saves tokens).
 
 **GPT / Codex**  
-`AGENTS.md` birleştirilir, alta yakın olan sonra gelir. `AGENTS.override.md` aynı dizinde `AGENTS.md`’yi ezer. 32 KiB’i aşınca **kırpılır** — kritik kuralı dosyanın başına ve iç içe klasörlere böl. Code review kuralları ayrı `## Code Review Rules`; lint’i CI’ya bırak.
+`AGENTS.md` files are merged; nearer-to-leaf wins later. Same-directory `AGENTS.override.md` overrides `AGENTS.md`. Over 32 KiB → **truncated** — put critical rules at the top and split into nested folders. Code review rules under separate `## Code Review Rules`; leave lint to CI.
 
 **ChatGPT web**  
-Repo md yüklenmez. Aynı kısa metni Custom instructions / Project’e yapıştır. Codex kullanıyorsan dosya yeter.
+Repo markdown is not loaded. Paste the same short text into Custom / Project instructions. If you use Codex, the file is enough.
 
 **Gemini**  
-`GEMINI.md` her prompt’a eklenir. Negatif kural + hiyerarşi. `@import` bakımı kolaylaştırır, **token düşürmez** (yine inline). Token için sil veya alt klasöre taşı. `@AGENTS.md` Claude gibi genişlemez; `context.fileName` ayarla.
+`GEMINI.md` is attached to every prompt. Prefer negative rules + hierarchy. `@import` helps maintenance but **does not save tokens** (still inlined). To save tokens, delete or move to a subdirectory. `@AGENTS.md` does not expand like Claude; set `context.fileName`.
 
 **Cursor (Auto / Grok / Claude / GPT — host Cursor)**  
-Kök `AGENTS.md` her oturum. Scoped kural `.mdc` + glob: her tura girmez. Düz `.md` `.cursor/rules/` içinde yok sayılır. Skill = görev prosedürü.
+Root `AGENTS.md` every session. Scoped rules: `.mdc` + glob so they are not always-on. Plain `.md` under `.cursor/rules/` is ignored. Skills = task procedures.
 
 **GitHub Copilot**  
-Kısa, kendi başına duran cümleler. `copilot-instructions.md` özet; uzun ortak metin `AGENTS.md`. Path-specific `applyTo`. Çelişen katmanları (kişisel + repo + org + AGENTS) biriktirme.
+Short, self-contained sentences. `copilot-instructions.md` is a summary; long shared text lives in `AGENTS.md`. Path-specific `applyTo`. Don’t stack conflicting personal + repo + org + AGENTS layers.
 
 **Grok Build**  
-`AGENTS.md` + skill + hook. Plan mode büyük değişiklik. `grok inspect` hangi talimatın yüklendiğini gösterir.
+`AGENTS.md` + skills + hooks. Plan mode for large changes. `grok inspect` shows what loaded.
 
-**Qwen / DeepSeek / açık ağırlıklar (Cline, Continue, OpenCode)**  
-Host `AGENTS.md` veya native rules okur. Prompt tarafı: hedef, kısıt, kabul kriteri, doğrulama. Prosedürü aşırı yazma; ajanın dosya gezmesini bozar.
+**Qwen / DeepSeek / open weights (Cline, Continue, OpenCode)**  
+Host reads `AGENTS.md` or native rules. On the prompt side: goal, constraints, acceptance, verification. Don’t over-write procedures; that hurts file exploration.
 
-## Yazım kalıbı
+## Writing pattern
 
-Kötü:
+Bad:
 
 ```markdown
-Kod kaliteli olsun. Test etmeyi unutma. Güvenliğe dikkat.
+Keep code quality high. Don’t forget to test. Be careful about security.
 ```
 
-İyi:
+Good:
 
 ```markdown
 - Install: `pnpm install`
-- Test: `pnpm test` (tek dosya: `pnpm vitest run path/to/file.test.ts`)
+- Test: `pnpm test` (single file: `pnpm vitest run path/to/file.test.ts`)
 - Do not edit `src/db/migrations/` without a human in the PR
 - Do not use `any`. Prefer `unknown` and narrow.
 ```
 
-## Pratik döngü (modellerin önerdiği iş)
+## Practical loop (what the vendors recommend)
 
-Keşfet → planla → uygula → test/lint çalıştır. Bunu AGENTS.md’ye manifesto olarak yazma; **komutları** yaz, ajan bitirmeden onları koşar.
+Discover → plan → implement → run test/lint. Don’t put that as a manifesto in AGENTS.md; write the **commands** so the agent runs them before finishing.
 
-## Bu repoda nerede
+## Where in this repo
 
-- Şablon: [`templates/AGENTS.md`](../templates/AGENTS.md)
-- Tek kaynak: [`shared-source-of-truth.md`](shared-source-of-truth.md)
-- Dosya adları: [`matrix.md`](matrix.md)
+- Template: [`templates/AGENTS.md`](../templates/AGENTS.md)
+- Single source: [`shared-source-of-truth.md`](shared-source-of-truth.md)
+- File names: [`matrix.md`](matrix.md)

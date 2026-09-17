@@ -1,36 +1,36 @@
-# Ürün kuralı
+# Product rule
 
-Yabgu ajanın **nasıl konuştuğuna karışmaz.** Hitap, dil, nezaket — host’un işi.
+Yabgu does **not** control how the agent speaks. Address, language, politeness — that is the host’s job.
 
-Yabgu: daha doğru proje bağlamı, daha az token.
+Yabgu: more accurate project context, fewer tokens.
 
-## Sıra
+## Order of work
 
-1. **Katalog + şablonlar** — hangi ajan hangi native dosyayı okur, nasıl yazılır (ürün çekirdeği; önce bunu bitir / güncelle).
-2. **MCP (yerel stdio)** — doküman/şablon sunar; `scan` → `plan` → kullanıcı onayı → `apply`; `measure` ile before/after. Katalogdan türetilir; native dosyaların yerini almaz.
-3. Kurulum [docs/hosts.md](hosts.md) resmi şemalarına göre — host başına snippet (`yabgu_host_setup`). Tahmin yok.
+1. **Catalog + templates** — which agent reads which native file, and how to write them (product core; finish / update this first).
+2. **MCP (local stdio)** — serves docs/templates; `scan` → `plan` → user approval → `apply`; `measure` for before/after. Derived from the catalog; does not replace native files.
+3. Install using official host schemas in [docs/hosts.md](hosts.md) — per-host snippet (`yabgu_host_setup`). No guessing.
 
-MCP, native dosyaların yerini almaz. Dosyaları **önerir / onayla yazar**; her turda yükleme yine host’undur.
+The MCP does not replace native files. It **proposes / writes after approval**; loading every turn is still the host’s job.
 
-Ölçüm protokolü: [docs/measure.md](measure.md). Token tasarrufu iddiası ancak ayrı before/after ölçümle.
+Measurement protocol: [docs/measure.md](measure.md). Claim token savings only with a separate measured before/after.
 
-Çelişki radarı + skill forge: [docs/conflicts-forge.md](conflicts-forge.md).
+Conflict radar + skill forge: [docs/conflicts-forge.md](conflicts-forge.md).
 
-## Gizlilik (MCP)
+## Privacy (MCP)
 
-Ekleyen kişinin projesi **yalnızca kendi makinesinde** kalır. Yabgu’yu yazan / dağıtan kişi o repoyu göremez, çekemez, log’layamaz.
+The project of the person who adds Yabgu stays **only on their machine**. The person who writes / ships Yabgu cannot see, pull, or log that repo.
 
-Bu yüzden MCP:
+Therefore the MCP:
 
-- **stdio / yerel süreç** — Cursor, Claude, Codex, Gemini, Grok’ta varsayılan. Kod yabgu sunucusuna gitmez.
-- **Telefon yok:** repo içeriği, yol, dosya listesi, telemetry, “ilk sorgu raporu” yabgu’ya gönderilmez.
-- **SaaS analiz yok:** “projeyi bize yükle, AGENTS.md üretelim” modeli yok. Tarama kullanıcının disk’inde.
-- **Log:** varsa kullanıcı makinesinde; uzak log yok.
-- **Yazma:** yalnızca `yabgu_apply` (host form elicitation UI onayı varsa o; yoksa `confirmed=true`) + isteğe bağlı `overwrite`. Hedef yalnızca native talimat yolları (`AGENTS.md`, ince adaptör, skill) — rastgele kaynak dosyası değil.
-- **`YABGU_READ_ONLY=1`:** `yabgu_apply` kaydedilmez. Copilot cloud / salt-okuma kurulumları için.
+- **stdio / local process** — default on Cursor, Claude, Codex, Gemini, Grok. Code does not go to a yabgu server.
+- **No phone-home:** repo contents, paths, file lists, telemetry, “first query reports” are not sent to yabgu.
+- **No SaaS analysis:** no “upload your project, we generate AGENTS.md”. Scanning is on the user’s disk.
+- **Logs:** if any, on the user’s machine; no remote logs.
+- **Writes:** only `yabgu_apply` (host form elicitation UI when available; otherwise `confirmed=true`) + optional `overwrite`. Targets only native instruction paths (`AGENTS.md`, thin adapters, skills) — not arbitrary source files.
+- **`YABGU_READ_ONLY=1`:** `yabgu_apply` is not registered. For Copilot cloud / read-only installs.
 
-Host’un (Cursor, GitHub, Claude) zaten açık olan workspace’i ayrı konu — o, yabgu yazarının erişimi değil.
+The host’s already-open workspace (Cursor, GitHub, Claude) is a separate matter — that is not access for the yabgu author.
 
-Copilot **cloud** agent MCP’si GitHub altyapısında çalışır. Orada da yabgu bir yabgu-backend’e veri göndermez; `tools` allowlist + salt okuma tool’larında `readOnlyHint` + `YABGU_READ_ONLY=1`. `yabgu_apply` allowlist’e bilinçli eklenmemeli.
+Copilot **cloud** agent MCP runs on GitHub’s infrastructure. Even there yabgu does not send data to a yabgu backend; use a `tools` allowlist + `readOnlyHint` on read-only tools + `YABGU_READ_ONLY=1`. Do not consciously add `yabgu_apply` to the allowlist.
 
-Uzak HTTP MCP ancak kullanıcı kendi sunucusunu gösterirse. Yabgu’nun resmi kurulumu uzak endpoint vermez.
+Remote HTTP MCP only if the user points at their own server. Yabgu’s official install does not ship a remote endpoint.
