@@ -22,7 +22,7 @@ Order (summary):
 3. JIT `GEMINI.md` in a tree when a tool touches a file there
 
 Check: `/memory show`  
-Reload: `/memory reload`
+Reload from disk: `/memory refresh` (official CLI command name)
 
 ## Sharing with AGENTS.md
 
@@ -46,7 +46,7 @@ Write 10–20 Gemini-specific lines; leave shared rules in `AGENTS.md` and tell 
 
 Templates: [`templates/GEMINI.md`](../templates/GEMINI.md) · [`templates/gemini/settings.json`](../templates/gemini/settings.json)
 
-Write negative rules (“Do not…”). `@import` does not reduce tokens; to reduce, delete or move content to a subfolder. [how-to-write.md](../docs/how-to-write.md)
+Write negative rules (“Do not…”). Prompt `@path` injects file contents into the query (not a Claude-style `@AGENTS.md` expand inside `GEMINI.md`). Prefer `context.fileName` for a shared `AGENTS.md`. Nested/imported context still costs tokens — shorten or move to a subtree for savings. [how-to-write.md](../docs/how-to-write.md)
 
 ## Source
 

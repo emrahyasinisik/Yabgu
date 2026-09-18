@@ -50,16 +50,16 @@ Leave out of the root:
 Repo markdown is not loaded. Paste the same short text into Custom / Project instructions. If you use Codex, the file is enough.
 
 **Gemini**  
-`GEMINI.md` is attached to every prompt. Prefer negative rules + hierarchy. `@import` helps maintenance but **does not save tokens** (still inlined). To save tokens, delete or move to a subdirectory. `@AGENTS.md` does not expand like Claude; set `context.fileName`.
+`GEMINI.md` is attached to every prompt. Prefer negative rules + hierarchy. Prompt `@path` injects files into the query; that is not Claude-style `@AGENTS.md` expand inside `GEMINI.md`. Set `context.fileName` to share `AGENTS.md`. Shorten or move content to a subtree to save tokens. Reload memory with `/memory refresh`.
 
 **Cursor (Auto / Grok / Claude / GPT — host Cursor)**  
-Root `AGENTS.md` every session. Scoped rules: `.mdc` + glob so they are not always-on. Plain `.md` under `.cursor/rules/` is ignored. Skills = task procedures.
+Root `AGENTS.md` every session. Scoped rules: `.mdc` + glob so they are not always-on. Plain `.md` under `.cursor/rules/` is ignored. Skills under `.cursor/skills/` or `.agents/skills/`. Cursor CLI also loads root `CLAUDE.md`; IDE Project Rules treat `AGENTS.md` + `.mdc` as primary.
 
 **GitHub Copilot**  
-Short, self-contained sentences. `copilot-instructions.md` is a summary; long shared text lives in `AGENTS.md`. Path-specific `applyTo`. Don’t stack conflicting personal + repo + org + AGENTS layers.
+Short, self-contained sentences. `copilot-instructions.md` is a summary; long shared text lives in `AGENTS.md`. Path-specific `applyTo`. Don’t stack conflicting personal + repo + org + AGENTS layers. GitHub.com code review agent instructions: `AGENTS.md` only (not CLAUDE/GEMINI in that column).
 
 **Grok Build**  
-`AGENTS.md` + skills + hooks. Plan mode for large changes. `grok inspect` shows what loaded.
+Loads `AGENTS.md` and may also load `CLAUDE.md` / `.grok/rules/` (compat rule dirs too). Prefer one shared `AGENTS.md`. Skills + hooks for procedures/enforcement. `grok inspect` shows what loaded.
 
 **Qwen / DeepSeek / open weights (Cline, Continue, OpenCode)**  
 Host reads `AGENTS.md` or native rules. On the prompt side: goal, constraints, acceptance, verification. Don’t over-write procedures; that hurts file exploration.

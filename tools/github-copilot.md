@@ -1,15 +1,15 @@
 # GitHub Copilot
 
-Copilot reads both its native files and `AGENTS.md`. Which surface reads what varies by feature; keeping both in the repo setup is the safest approach.
+Copilot reads both its native files and `AGENTS.md`. Which surface reads which file varies — check the [support matrix](https://docs.github.com/en/copilot/reference/custom-instructions-support). For a multi-host repo, keep root `AGENTS.md` + `.github/copilot-instructions.md`.
 
 ## Files to use
 
 | File | Scope |
 | --- | --- |
-| `.github/copilot-instructions.md` | Repo-wide (Chat, review, coding agent, CLI) |
+| `.github/copilot-instructions.md` | Repo-wide (Chat, review, coding agent, CLI — most surfaces) |
 | `.github/instructions/**/*.instructions.md` | Path-specific (`applyTo` glob) |
-| `AGENTS.md` | Agent instructions (root + nested) |
-| `CLAUDE.md` / `GEMINI.md` | Some Copilot surfaces (CLI, coding agent, review) also read the root file |
+| `AGENTS.md` | Agent instructions (root + nested); **code review on GitHub.com includes this** |
+| `CLAUDE.md` / `GEMINI.md` | Agent instructions on **some** surfaces (e.g. cloud agent, CLI) — **not** listed for GitHub.com code review agent instructions |
 | `~/.copilot/copilot-instructions.md` | Copilot CLI, user-wide |
 | `~/.copilot/instructions/**/*.instructions.md` | Copilot CLI, modular personal |
 
@@ -20,14 +20,14 @@ Copilot reads both its native files and `AGENTS.md`. Which surface reads what va
 
 - Stack: ...
 - Test: `npm test`
-- PR: small diff, add tests
+- PR: small diffs, add tests
 ```
 
-Keep it short. Leave long shared rules in `AGENTS.md`; this file should hold the summary Copilot needs on every hint.
+Keep it short. Long shared rules stay in `AGENTS.md`; this file holds the summary Copilot needs on every hint.
 
 ## Path-specific
 
-The filename must end with `*.instructions.md`.
+File name must end with `*.instructions.md`.
 
 ```markdown
 ---
@@ -39,15 +39,15 @@ Use React Server Components in this folder.
 
 Optional `excludeAgent`: `"code-review"` or `"cloud-agent"`.
 
-## Relationship to AGENTS.md
+## AGENTS.md relationship
 
-Copilot supports nested `AGENTS.md`; the file closest to the working directory takes precedence. A root `AGENTS.md` is enough to share with Cursor/Codex; also add `.github/copilot-instructions.md` for Copilot Chat.
+Copilot supports nested `AGENTS.md`; the nearest file in the tree wins. Sharing with Cursor/Codex: root `AGENTS.md` is enough; for Copilot Chat also add `.github/copilot-instructions.md`.
 
-Copilot CLI expands `@relative/path` imports inside `AGENTS.md` / `CLAUDE.md`. It does not expand them inside `GEMINI.md` or `*.instructions.md`.
+Copilot CLI expands `@relative/path` imports inside `AGENTS.md` / `CLAUDE.md`. It does not expand those inside `GEMINI.md` or `*.instructions.md`.
 
 ## ChatGPT vs Copilot
 
-GitHub Copilot ≠ ChatGPT web. Copilot files are for GitHub/VS Code/CLI. ChatGPT web does not read them.
+GitHub Copilot ≠ ChatGPT web. Copilot files are for GitHub / VS Code / CLI. ChatGPT web does not read them.
 
 Write short, non-conflicting sentences. Do not copy long shared text. [how-to-write.md](../docs/how-to-write.md)
 

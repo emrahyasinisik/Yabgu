@@ -103,6 +103,8 @@ describe("MCP harness", () => {
   it("hides yabgu_apply when readOnly / YABGU_READ_ONLY", async () => {
     assert.equal(isReadOnlyFromEnv({ YABGU_READ_ONLY: "1" }), true);
     assert.equal(isReadOnlyFromEnv({ YABGU_READ_ONLY: "true" }), true);
+    assert.equal(isReadOnlyFromEnv({ YABGU_READ_ONLY: "yes" }), true);
+    assert.equal(isReadOnlyFromEnv({ YABGU_READ_ONLY: "on" }), true);
     assert.equal(isReadOnlyFromEnv({}), false);
 
     const { client, close } = await connectClient({ readOnly: true });
@@ -247,6 +249,32 @@ describe("MCP harness", () => {
     }
   });
 
+  it("refuses write when form elicitation is cancelled", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "yabgu-elicit-cancel-"));
+    const { client, close } = await connectClient({
+      elicitation: true,
+      elicitAction: "cancel",
+    });
+    try {
+      const denied = await client.callTool({
+        name: "yabgu_apply",
+        arguments: {
+          root: dir,
+          files: [{ path: "AGENTS.md", content: "# no\n" }],
+          confirmed: true,
+        },
+      });
+      assert.equal(denied.isError, true);
+      const text = String(
+        (denied.content as Array<{ text?: string }>)[0]?.text ?? "",
+      );
+      assert.match(text, /cancel/i);
+    } finally {
+      await close();
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it("cursor session scan does not treat GEMINI.md as a gap", async () => {
     const { client, close } = await connectClient({ clientName: "cursor" });
     try {
@@ -310,6 +338,23 @@ describe("MCP harness", () => {
         arguments: { id: "nope" },
       });
       assert.equal(result.isError, true);
+    } finally {
+      await close();
+    }
+  });
+
+  it("returns isError for a missing root directory", async () => {
+    const { client, close } = await connectClient();
+    try {
+      const result = await client.callTool({
+        name: "yabgu_scan",
+        arguments: { root: join(tmpdir(), "yabgu-no-such-root-xyz") },
+      });
+      assert.equal(result.isError, true);
+      const text = String(
+        (result.content as Array<{ text?: string }>)[0]?.text ?? "",
+      );
+      assert.match(text, /not a directory|root/i);
     } finally {
       await close();
     }

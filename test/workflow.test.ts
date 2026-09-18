@@ -96,6 +96,8 @@ describe("scan / plan / apply", () => {
     assert.equal(isAllowedInstructionPath("AGENTS.md"), true);
     assert.equal(isAllowedInstructionPath(".cursor/rules/ts.mdc"), true);
     assert.equal(isAllowedInstructionPath("src/index.ts"), false);
+    assert.equal(isAllowedInstructionPath(".env"), false);
+    assert.equal(isAllowedInstructionPath(".github/workflows/ci.yml"), false);
 
     const dir = mkdtempSync(join(tmpdir(), "yabgu-allow-"));
     try {
@@ -104,11 +106,13 @@ describe("scan / plan / apply", () => {
         [
           { path: "src/index.ts", content: "export {}\n" },
           { path: "package.json", content: "{}\n" },
+          { path: ".env", content: "SECRET=1\n" },
+          { path: ".github/workflows/ci.yml", content: "name: ci\n" },
         ],
         { confirmed: true },
       );
       assert.deepEqual(result.written, []);
-      assert.equal(result.skipped.length, 2);
+      assert.equal(result.skipped.length, 4);
 
       const huge = applyFiles(
         dir,

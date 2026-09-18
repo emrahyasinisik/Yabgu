@@ -10,12 +10,12 @@ Yabgu does not control speaking style. The MCP **proposes** native files for the
 
 | Host | Native files | Source |
 | --- | --- | --- |
-| Cursor | `AGENTS.md`, `.cursor/rules/*.mdc`, skills | [Rules](https://cursor.com/docs/rules) |
+| Cursor | `AGENTS.md`, `.cursor/rules/*.mdc`, skills (`.cursor/` / `.agents/`); CLI also `CLAUDE.md` | [Rules](https://cursor.com/docs/rules) · [CLI](https://cursor.com/docs/cli/using) |
 | Claude Code | `CLAUDE.md`, `.claude/rules/`, skills | [Memory](https://code.claude.com/docs/en/memory) |
 | Codex / ChatGPT desktop+IDE | `AGENTS.md`, `AGENTS.override.md`, `~/.codex/AGENTS.md` | [AGENTS.md](https://developers.openai.com/codex/guides/agents-md) |
 | Copilot | `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, `AGENTS.md` | [Custom instructions](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-repository-instructions) |
 | Gemini CLI | `GEMINI.md`, `~/.gemini/GEMINI.md` | [GEMINI.md](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/gemini-md.md) |
-| Grok Build | `AGENTS.md`; `grok inspect` | [Grok Build](https://docs.x.ai/build/overview) |
+| Grok Build | `AGENTS.md`, also `CLAUDE.md` / `.grok/rules/`; `grok inspect` | [Project rules](https://docs.x.ai/build/features/project-rules) |
 | Windsurf / Cascade | `.devin/rules/` (preferred), `.windsurf/rules/` fallback, `AGENTS.md` | [Memories & Rules](https://docs.windsurf.com/windsurf/cascade/memories) |
 | OpenCode | `AGENTS.md`, `opencode.json` | [Config](https://opencode.ai/docs/config/) |
 | ChatGPT web chat | No repo file; Custom / Project instructions | Codex is a separate product |

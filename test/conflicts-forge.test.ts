@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -6,6 +7,16 @@ import { findConflicts } from "../src/conflicts.js";
 import { forgeSkill, forgeSkillFromText } from "../src/forge.js";
 
 const FIX = join(fileURLToPath(new URL(".", import.meta.url)), "..", "fixtures");
+
+function listRelFiles(dir: string, prefix = ""): string[] {
+  const out: string[] = [];
+  for (const name of readdirSync(dir, { withFileTypes: true })) {
+    const rel = prefix ? `${prefix}/${name.name}` : name.name;
+    if (name.isDirectory()) out.push(...listRelFiles(join(dir, name.name), rel));
+    else out.push(rel);
+  }
+  return out.sort();
+}
 
 describe("conflicts", () => {
   it("flags opposing push rules and mismatched test commands", () => {
@@ -71,5 +82,14 @@ describe("forge skill", () => {
       host: "claude",
     });
     assert.equal(report.draft?.path, ".claude/skills/migrate-db/SKILL.md");
+  });
+
+  it("does not write skill files to disk (draft only)", () => {
+    const root = join(FIX, "procedure-repo");
+    const before = listRelFiles(root);
+    const report = forgeSkill({ mode: "agents", root });
+    assert.ok(report.draft, "expected a draft");
+    assert.equal(existsSync(join(root, report.draft!.path)), false);
+    assert.deepEqual(listRelFiles(root), before);
   });
 });

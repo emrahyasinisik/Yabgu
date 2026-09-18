@@ -56,23 +56,25 @@ Correct shape: thin `AGENTS.md` + thin adapters → [shared source of truth](doc
 
 | Tool | Prefer these | Optional / native | Usually does not load |
 | --- | --- | --- | --- |
-| **Cursor** | `AGENTS.md`, `.cursor/rules/*.mdc` | `.cursor/skills/*/SKILL.md` | `CLAUDE.md`, `GEMINI.md` |
+| **Cursor** | `AGENTS.md`, `.cursor/rules/*.mdc` | `.cursor/skills/` · `.agents/skills/`; CLI also reads `CLAUDE.md` | `GEMINI.md` (IDE); treat `CLAUDE.md` as CLI/compat, not IDE primary |
 | **Claude Code** | `CLAUDE.md` or `.claude/CLAUDE.md` | `.claude/rules/`, skills, `CLAUDE.local.md` | `AGENTS.md` (not directly) |
 | **ChatGPT / Codex** | `AGENTS.md` | `AGENTS.override.md`, `~/.codex/AGENTS.md` | `CLAUDE.md` (not directly) |
-| **GitHub Copilot** | `.github/copilot-instructions.md`, `AGENTS.md` | `.github/instructions/*.instructions.md` | — |
+| **GitHub Copilot** | `.github/copilot-instructions.md`, `AGENTS.md` | `.github/instructions/*.instructions.md`; `CLAUDE.md`/`GEMINI.md` on some surfaces | Code review agent instructions: `AGENTS.md` only (see matrix) |
 | **Gemini CLI** | `GEMINI.md` | `~/.gemini/GEMINI.md`, optional `AGENTS.md` via settings | — |
-| **Grok Build** | `AGENTS.md` | skills, hooks; `grok inspect` | — |
+| **Grok Build** | `AGENTS.md` | `CLAUDE.md`, `.grok/rules/`; skills, hooks; `grok inspect` | — |
 | **Windsurf** | `AGENTS.md`, `.devin/rules/*.md` | `.windsurf/rules/` (legacy), skills | — |
 | **Cline / Roo** | `.clinerules` or `.clinerules/` | `AGENTS.md` (support growing) | — |
 | **ChatGPT web** | In-product Instructions | Project instructions | Repo `.md` is not auto-loaded |
 
 Details: [docs/matrix.md](docs/matrix.md)
 
+Already set up (non-empty `AGENTS.md`): do not overwrite — call `yabgu_conflicts` once, then continue the user’s original task.
+
 ## Setup
 
 ### npm (recommended)
 
-npm rejected the unscoped name `yabgu` as too similar to `yargs`, so the package is scoped:
+Published package: `@emrahyasinisik/yabgu` (bin still `yabgu`). Use the scoped name on the registry:
 
 ```bash
 npm install -g @emrahyasinisik/yabgu

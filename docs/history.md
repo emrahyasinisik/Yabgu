@@ -77,6 +77,6 @@ Use these in the GitHub UI (Settings → General) if the CLI is unavailable:
 ## Notes for consumers
 
 - License: MIT
-- Package name: `@emrahyasinisik/yabgu` (unscoped `yabgu` blocked by npm as too similar to `yargs`; bin remains `yabgu`)
+- Package name: `@emrahyasinisik/yabgu` (scoped on the registry; bin remains `yabgu`)
 - Node `>=18`
 - Default branch: `main`

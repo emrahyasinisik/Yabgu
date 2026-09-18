@@ -6,13 +6,14 @@ There are three layers for giving project instructions to the Cursor agent. Do n
 
 | File | Required? | Purpose |
 | --- | --- | --- |
-| `AGENTS.md` | Enough for small projects | Plain markdown, root + subfolders |
+| `AGENTS.md` | Enough for small projects | Plain markdown, root + subfolders (IDE + CLI) |
 | `.cursor/rules/*.mdc` | When you need scoped rules | `alwaysApply`, `globs`, `description` |
-| `.cursor/skills/<name>/SKILL.md` | When you need a task procedure | PR review, commit format, domain work |
+| `.cursor/skills/<name>/SKILL.md` or `.agents/skills/<name>/SKILL.md` | When you need a task procedure | PR review, commit format, domain work |
+| `CLAUDE.md` (root) | No for IDE-first teams | **Cursor CLI** also loads it as rules; IDE Project Rules docs do not list it as primary |
 | User Rules (Settings) | Personal preference | Your style across all projects |
 | `.cursorrules` | No | Legacy single file; do not write in new projects |
 
-Cursor does not read `CLAUDE.md` or `GEMINI.md`. Using a Gemini (or Claude, GPT, Grok) **model** inside Cursor does not change that — those files are for other *hosts* (Gemini CLI, Claude Code), not for a model picker.
+**IDE vs CLI:** Cursor **IDE** Agent guidance is `AGENTS.md` + `.cursor/rules/*.mdc` ([Rules](https://cursor.com/docs/rules)). Cursor **CLI** also reads root `CLAUDE.md` alongside those ([CLI using](https://cursor.com/docs/cli/using)). Prefer shared `AGENTS.md`; do not treat `CLAUDE.md` as Cursor IDE’s main file. Cursor does **not** auto-load `GEMINI.md`. Using a Gemini (or Claude, GPT, Grok) **model** inside Cursor does not change the host — those files are for other hosts (Gemini CLI, Claude Code), not for a model picker.
 
 ## AGENTS.md
 
@@ -62,12 +63,12 @@ Templates:
 
 ```text
 .cursor/skills/review-pr/SKILL.md
+.agents/skills/review-pr/SKILL.md
 ```
 
-Put `name` and `description` in the frontmatter. The description controls when the agent picks the skill.
+Official discovery also includes `~/.cursor/skills/`, `~/.agents/skills/`, and (compat) `.claude/skills/` / `.codex/skills/` ([Agent Skills](https://cursor.com/docs/skills)).
 
-Personal skill: `~/.cursor/skills/<name>/SKILL.md`  
-Project skill: `.cursor/skills/<name>/SKILL.md`
+Put `name` and `description` in the frontmatter. The description controls when the agent picks the skill.
 
 Template: [`templates/skills/SKILL.md`](../templates/skills/SKILL.md)
 
@@ -83,3 +84,5 @@ Shared writing guidance: [how-to-write.md](../docs/how-to-write.md)
 ## Source
 
 - https://cursor.com/docs/rules
+- https://cursor.com/docs/cli/using
+- https://cursor.com/docs/skills
