@@ -16,7 +16,7 @@
 
 ---
 
-**Goal:** Make coding agents (Cursor, Claude, Codex, Copilot, Gemini, Grok, and similar) **more accurate** and **cheaper on tokens** — without switching models — by fixing the instruction files loaded every turn.
+**Goal:** Without switching models — short instruction files + local MCP so agents are **more accurate** (Cursor, Claude, Codex, Copilot, Gemini, Grok, …). Lower tokens/bills are the intended *mechanism*, **not a guaranteed %-savings claim** — claim only with a separate measured before/after → [docs/measure.md](docs/measure.md) · [docs/product.md](docs/product.md).
 
 | Catalog + templates | Local MCP |
 | --- | --- |
@@ -39,9 +39,9 @@ flowchart LR
 
 Project timeline: [docs/history.md](docs/history.md).
 
-## Why tokens drop and accuracy rises
+## Why accuracy rises (and tokens usually drop)
 
-The agent stops rediscovering the stack, test command, and “do not” list on every message. Discovery turns are the expensive part.
+Short, correct instruction setup reduces rediscovery of the stack, test command, and “do not” list every message. Discovery turns are expensive — that is the *mechanism*, not an unmeasured “%X savings” promise. What we can sell today: **setup health 0–100** before/after (`yabgu_measure`).
 
 | Common mistake | Result |
 | --- | --- |
@@ -185,9 +185,9 @@ Target: keep `AGENTS.md` under ~200 lines.
 ## What this is not
 
 - Does **not** control how the agent speaks (tone, address, language)
-- Not a model picker / Auto router
+- Not a model picker / Auto router — an **instruction / host-setup standard**
 - Does not inject hidden files into ChatGPT web
-- Does not claim “%X token savings” without measurement → [docs/measure.md](docs/measure.md)
+- Does not sell the measure score as a bill proxy; does not claim “%X token / bill savings” without measurement → [docs/measure.md](docs/measure.md)
 
 Privacy & product rules: [docs/product.md](docs/product.md) · consumer example: [examples/README.md](examples/README.md) · conflicts & forge: [docs/conflicts-forge.md](docs/conflicts-forge.md)
 

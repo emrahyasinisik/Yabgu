@@ -48,4 +48,4 @@ npx yabgu forge <path>
 - Do not duplicate the same long rule set in every adapter file (that wastes tokens and causes conflicts).
 - Do not put multi-step procedures in always-on files; use skills.
 - Do not commit `CLAUDE.local.md` or `AGENTS.override.md`.
-- Do not claim a numeric token savings figure without a measured before/after ([docs/measure.md](docs/measure.md)).
+- Do not claim a numeric token or bill savings figure without a measured before/after of tokens/context/bill. `yabgu_measure` is setup health (0–100), not an invoice proxy ([docs/measure.md](docs/measure.md), [docs/product.md](docs/product.md)).

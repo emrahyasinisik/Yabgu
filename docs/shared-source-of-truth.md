@@ -1,6 +1,6 @@
 # Single source of truth: AGENTS.md + adapters
 
-Goal: fewer tokens and a more accurate agent. Don’t paste the same rule into three files. Write one `AGENTS.md` and bridge other tools to it. Every copy both bloats context and produces wrong code when copies conflict.
+Goal: a more accurate agent and non-bloated context. Don’t paste the same rule into three files. Write one `AGENTS.md` and bridge other tools to it. Every copy both bloats context and produces wrong code when copies conflict. (Token/bill savings claims need a separate measure — [measure.md](measure.md).)
 
 ## 1. Write the shared file
 

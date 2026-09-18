@@ -1,6 +1,15 @@
 # Before / after measurement
 
-Yabgu does **not** claim a numeric token savings figure without a measured before/after. Use this local heuristic instead.
+Yabgu does **not** claim a numeric token or bill savings figure without a measured before/after of tokens/context/bill. `yabgu_measure` is a **setup health** heuristic (0–100), not a invoice proxy.
+
+## What we can say vs cannot
+
+| Can say (after protocol) | Cannot say from measure alone |
+| --- | --- |
+| Setup health improved (e.g. score went from low → high) | “%X cheaper tokens / lower bill” |
+| Healthy repos: no needless overwrite; score does not drop | Treat the 0–100 score as invoice proof |
+
+External story: better instruction setup; savings claim only when separately measured. See [product.md](product.md).
 
 ## Command
 
@@ -30,4 +39,4 @@ Score is **0–100 setup health**, not tokens saved.
 4. Run `yabgu measure <repo>` again → **after**.
 5. Record: score delta, missingRecommended cleared?, toneRuleHits delta, files written.
 
-Do not publish marketing numbers from the heuristic score alone. For token claims, measure host context size or billable tokens separately with the same prompts before and after.
+Do not publish marketing numbers from the heuristic score alone. For token or bill claims, measure host context size or billable tokens separately with the same prompts before and after.
