@@ -23,13 +23,13 @@ Or via MCP: `yabgu_measure` with the same root.
 
 | Signal | Intent |
 | --- | --- |
-| `AGENTS.md` present and non-empty | Shared source of truth |
-| Line count ≤ ~200 | Avoid always-on bloat |
-| Adapter files | Thin host files exist when justified |
-| Tone-rule hits | Out-of-scope “how to talk” phrases |
-| Missing recommended | Usually empty/missing `AGENTS.md` |
+| `AGENTS.md` present and non-empty | Shared source of truth (+50) |
+| Line count ≤ ~200 | Avoid always-on bloat (+25; long files +8) |
+| Session-native adapters | Thin host files for *this* MCP host only (+10 each, max +25). Other-host files are listed but do not raise the score. Without a known session host, adapter bonus is 0 — AGENTS-only is healthy. |
+| Tone-rule hits | Positive “how to talk” phrases (−10 each, max −30). Ban lines (`Do not …`, `out of scope`) are ignored. |
+| Missing recommended | Session gaps or empty/missing `AGENTS.md` (−5 each, max −20) |
 
-Score is **0–100 setup health**, not tokens saved.
+Reports include a **score breakdown** table so the 0–100 total is explainable. Score is **setup health**, not tokens saved.
 
 ## Protocol (3–5 real repos)
 

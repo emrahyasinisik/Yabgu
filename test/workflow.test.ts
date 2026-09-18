@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import { applyFiles, isAllowedInstructionPath } from "../src/apply.js";
-import { measureRepo } from "../src/measure.js";
+import { collectToneHits, measureRepo } from "../src/measure.js";
 import { planFromScan } from "../src/plan.js";
 import { resolveProjectRoot } from "../src/root.js";
 import { scanRepo } from "../src/scan.js";
@@ -145,5 +145,63 @@ describe("measure", () => {
     assert.ok(ok.score > bare.score);
     assert.ok(tone.toneRuleHits.length >= 2);
     assert.ok(tone.score < ok.score);
+  });
+
+  it("ignores tone phrases on ban / out-of-scope lines", () => {
+    const hits = collectToneHits(
+      "AGENTS.md",
+      [
+        '- Do not add communication, tone, or "how to talk to the user" rules. That is out of scope.',
+        "Be polite. Always greet the user.",
+      ].join("\n"),
+    );
+    assert.equal(hits.length, 2);
+    assert.ok(hits.every((h) => /be polite|always greet/i.test(h.match)));
+  });
+
+  it("does not score other-host adapters without a session; scores session adapters", () => {
+    const root = join(FIX, "conflict-repo");
+    const noSession = measureRepo(root);
+    assert.ok(noSession.adapterFiles.includes("CLAUDE.md"));
+    assert.equal(noSession.sessionAdapterFiles.length, 0);
+    assert.equal(noSession.scoreBreakdown.sessionAdapters, 0);
+
+    const cursor = measureRepo(root, undefined, {
+      clientName: "cursor",
+      host: "cursor",
+      source: "clientInfo",
+      loadsNote: "",
+      modelNote: "",
+    });
+    assert.ok(!cursor.sessionAdapterFiles.includes("CLAUDE.md"));
+    assert.equal(cursor.scoreBreakdown.sessionAdapters, 0);
+
+    const claude = measureRepo(root, undefined, {
+      clientName: "claude-code",
+      host: "claude",
+      source: "clientInfo",
+      loadsNote: "",
+      modelNote: "",
+    });
+    assert.ok(claude.sessionAdapterFiles.includes("CLAUDE.md"));
+    assert.equal(claude.scoreBreakdown.sessionAdapters, 10);
+    assert.ok(claude.score > cursor.score);
+  });
+
+  it("exposes a score breakdown that sums to the total", () => {
+    const ok = measureRepo(join(FIX, "with-agents"));
+    const b = ok.scoreBreakdown;
+    assert.equal(
+      ok.score,
+      Math.max(
+        0,
+        Math.min(
+          100,
+          b.agentsPresent + b.agentsLines + b.sessionAdapters + b.tonePenalty + b.missingPenalty,
+        ),
+      ),
+    );
+    assert.equal(b.agentsPresent, 50);
+    assert.equal(b.agentsLines, 25);
   });
 });

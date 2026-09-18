@@ -19,17 +19,61 @@ export const TONE_PATTERNS: RegExp[] = [
   /\bkonuşma\s+stili\b/i,
 ];
 
+/**
+ * Lines that ban / exclude tone rules — not instructions to speak a certain way.
+ * "Do not add how to talk rules" must not count as a tone hit.
+ */
+export function isToneBanLine(line: string): boolean {
+  return (
+    /\bdo\s+not\b/i.test(line) ||
+    /\bdon't\b/i.test(line) ||
+    /\bout\s+of\s+scope\b/i.test(line) ||
+    /\b(omit|remove|avoid)\b[\s\S]{0,60}\b(tone|communication|how\s+to\s+talk|voice|emoji)\b/i.test(
+      line,
+    ) ||
+    /\bno\s+(tone|communication|voice)\b/i.test(line)
+  );
+}
+
+/** Scan one file for positive tone-rule phrases (skips ban lines). */
+export function collectToneHits(
+  rel: string,
+  text: string,
+): Array<{ file: string; match: string }> {
+  const hits: Array<{ file: string; match: string }> = [];
+  for (const line of text.split(/\r?\n/)) {
+    if (isToneBanLine(line)) continue;
+    for (const re of TONE_PATTERNS) {
+      const m = line.match(re);
+      if (m) hits.push({ file: rel, match: m[0] });
+    }
+  }
+  return hits;
+}
+
+export type ScoreBreakdown = {
+  agentsPresent: number;
+  agentsLines: number;
+  sessionAdapters: number;
+  tonePenalty: number;
+  missingPenalty: number;
+};
+
 export type MeasureReport = {
   root: string;
   hasAgentsMd: boolean;
   agentsEmpty: boolean;
   agentsLines: number;
+  /** All non-AGENTS instruction files present (informational). */
   adapterFiles: string[];
+  /** Session-native adapters only (excludes AGENTS.md); empty when host unknown. */
+  sessionAdapterFiles: string[];
   toneRuleHits: Array<{ file: string; match: string }>;
   missingRecommended: string[];
   instructionFilesPresent: string[];
   /** 0–100; higher is healthier for agent instruction setup. */
   score: number;
+  scoreBreakdown: ScoreBreakdown;
   notes: string[];
 };
 
@@ -42,15 +86,28 @@ function readIfFile(path: string): string | null {
   }
 }
 
-function scoreFrom(report: Omit<MeasureReport, "score">): number {
-  let score = 0;
-  if (report.hasAgentsMd && !report.agentsEmpty) score += 40;
-  if (report.agentsLines > 0 && report.agentsLines <= 200) score += 15;
-  else if (report.agentsLines > 200) score += 5;
-  score += Math.min(25, report.adapterFiles.length * 8);
-  score -= Math.min(30, report.toneRuleHits.length * 10);
-  score -= Math.min(20, report.missingRecommended.length * 5);
-  return Math.max(0, Math.min(100, score));
+function scoreFrom(report: Omit<MeasureReport, "score" | "scoreBreakdown">): {
+  score: number;
+  scoreBreakdown: ScoreBreakdown;
+} {
+  const agentsPresent = report.hasAgentsMd && !report.agentsEmpty ? 50 : 0;
+  let agentsLines = 0;
+  if (report.agentsLines > 0 && report.agentsLines <= 200) agentsLines = 25;
+  else if (report.agentsLines > 200) agentsLines = 8;
+  // Only session-native adapters count — other-host files do not inflate health.
+  const sessionAdapters = Math.min(25, report.sessionAdapterFiles.length * 10);
+  const tonePenalty = -Math.min(30, report.toneRuleHits.length * 10);
+  const missingPenalty = -Math.min(20, report.missingRecommended.length * 5);
+  const scoreBreakdown: ScoreBreakdown = {
+    agentsPresent,
+    agentsLines,
+    sessionAdapters,
+    tonePenalty,
+    missingPenalty,
+  };
+  const raw =
+    agentsPresent + agentsLines + sessionAdapters + tonePenalty + missingPenalty;
+  return { score: Math.max(0, Math.min(100, raw)), scoreBreakdown };
 }
 
 /**
@@ -80,16 +137,15 @@ export function measureRepo(
 
   const toneRuleHits: Array<{ file: string; match: string }> = [];
   for (const { rel, text } of collectInstructionDocs(root)) {
-    for (const re of TONE_PATTERNS) {
-      const m = text.match(re);
-      if (m) toneRuleHits.push({ file: rel, match: m[0] });
-    }
+    toneRuleHits.push(...collectToneHits(rel, text));
   }
 
   const missingRecommended: string[] = [];
+  let sessionAdapterFiles: string[] = [];
   if (session) {
     const classified = classifyInstructionFiles(s.instructionFiles, session);
     missingRecommended.push(...classified.missingForSession);
+    sessionAdapterFiles = classified.presentForSession.filter((p) => p !== "AGENTS.md");
   } else if (!hasAgentsMd || agentsEmpty) {
     missingRecommended.push("AGENTS.md");
   }
@@ -105,6 +161,11 @@ export function measureRepo(
     ...s.notes,
     "Score is a local heuristic for setup health — not a measured token savings figure.",
   ];
+  if (!session?.host && adapterFiles.length > 0) {
+    notes.push(
+      "Other-host adapters present but session host is unknown — they do not add to the score (pass the MCP session to score session-native files only).",
+    );
+  }
 
   const partial = {
     root,
@@ -112,13 +173,15 @@ export function measureRepo(
     agentsEmpty,
     agentsLines,
     adapterFiles,
+    sessionAdapterFiles,
     toneRuleHits,
     missingRecommended,
     instructionFilesPresent,
     notes,
   };
 
-  return { ...partial, score: scoreFrom(partial) };
+  const { score, scoreBreakdown } = scoreFrom(partial);
+  return { ...partial, score, scoreBreakdown };
 }
 
 export function formatMeasureReport(
@@ -152,9 +215,21 @@ export function formatMeasureReport(
     `| --- | --- |`,
     `| AGENTS.md | ${report.hasAgentsMd ? (report.agentsEmpty ? "empty" : `${report.agentsLines} lines`) : "missing"} |`,
     `| Adapters present | ${report.adapterFiles.length ? report.adapterFiles.join(", ") : "(none)"} |`,
+    `| Session adapters (scored) | ${report.sessionAdapterFiles.length ? report.sessionAdapterFiles.join(", ") : "(none — need session host, or AGENTS-only is enough)"} |`,
     `| Nested / other present | ${report.instructionFilesPresent.filter((p) => p !== "AGENTS.md" && !report.adapterFiles.includes(p)).join(", ") || "(none)"} |`,
     `| Tone-rule hits | ${report.toneRuleHits.length} |`,
     `| Missing recommended | ${report.missingRecommended.length ? report.missingRecommended.join(", ") : "(none)"} |`,
+    "",
+    "## Score breakdown",
+    "",
+    `| Component | Points |`,
+    `| --- | --- |`,
+    `| AGENTS.md present | ${report.scoreBreakdown.agentsPresent} |`,
+    `| Line count | ${report.scoreBreakdown.agentsLines} |`,
+    `| Session adapters | ${report.scoreBreakdown.sessionAdapters} |`,
+    `| Tone penalty | ${report.scoreBreakdown.tonePenalty} |`,
+    `| Missing penalty | ${report.scoreBreakdown.missingPenalty} |`,
+    `| **Total** | **${report.score}** |`,
     "",
   ];
   if (report.toneRuleHits.length) {
