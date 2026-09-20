@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yabgu — short instruction files for coding agents</title>
+  <meta name="description" content="Catalog, templates, and a local stdio MCP so coding agents are more accurate. No model switching. Repo stays on your machine." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="top">
+    <a class="brand-mark" href="#top">Yabgu</a>
+    <nav>
+      <a href="#install">Install</a>
+      <a href="#loop">Loop</a>
+      <a href="https://github.com/emrahyasinisik/Yabgu">GitHub</a>
+      <a class="nav-cta" href="https://www.npmjs.com/package/@emrahyasinisik/yabgu">npm</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Old Turkic · the one who carries out the work</p>
+        <h1 class="brand">Yabgu</h1>
+        <p class="lede">
+          Short instruction files + a local MCP so coding agents are more accurate —
+          without switching models. Your repo never leaves your machine.
+        </p>
+        <p class="lede-tr" lang="tr">Kısa talimat dosyaları; model değişmez, proje yerelde kalır.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="#install">Install MCP</a>
+          <a class="btn ghost" href="https://github.com/emrahyasinisik/Yabgu">View on GitHub</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <img src="assets/yabgu-banner.png" alt="" width="920" height="auto" />
+      </div>
+    </section>
+
+    <section id="install" class="section install">
+      <h2>Add in ≈60 seconds</h2>
+      <p class="section-lede">Paste a config, or write it from the terminal. No chicken-egg — you do not need MCP already connected.</p>
+
+      <figure class="demo">
+        <img src="assets/mcp-add-cursor.gif" alt="Add Yabgu MCP in Cursor: create mcp.json, then enable in Settings → MCP" width="720" height="405" />
+        <figcaption>Cursor: paste <code>.cursor/mcp.json</code>, enable in Settings → MCP</figcaption>
+      </figure>
+
+      <div class="host-grid">
+        <article class="host-card">
+          <h3>Cursor</h3>
+          <p>Create <code>.cursor/mcp.json</code> (or <code>~/.cursor/mcp.json</code>):</p>
+          <pre><code>{
+  "mcpServers": {
+    "yabgu": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"]
+    }
+  }
+}</code></pre>
+          <p class="or">or</p>
+          <pre><code>npx @emrahyasinisik/yabgu setup cursor --write</code></pre>
+        </article>
+        <article class="host-card">
+          <h3>Claude Code</h3>
+          <pre><code>claude mcp add --transport stdio yabgu -- npx -y @emrahyasinisik/yabgu mcp</code></pre>
+          <p>Codex, Copilot, Gemini, Grok, … → <a href="https://github.com/emrahyasinisik/Yabgu/blob/main/docs/hosts.md">docs/hosts.md</a> or <code>yabgu setup &lt;host&gt;</code>.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="loop" class="section loop">
+      <h2>Scan → plan → approve → apply</h2>
+      <p class="section-lede">Local stdio only. Writes instruction paths after you approve — not arbitrary source.</p>
+      <figure class="demo">
+        <img src="assets/scan-plan-apply.gif" alt="Yabgu loop: scan, plan, approve, apply, measure" width="720" height="405" />
+        <figcaption>Core loop · setup health via <code>yabgu_measure</code> (0–100, not a bill claim)</figcaption>
+      </figure>
+    </section>
+
+    <section class="section about">
+      <h2>What this is / is not</h2>
+      <div class="split">
+        <ul class="yes">
+          <li>Instruction / host-setup standard</li>
+          <li>Catalog + templates for Cursor, Claude, Codex, Copilot, Gemini, Grok…</li>
+          <li>Local MCP: scan, plan, apply, measure, conflicts, forge</li>
+        </ul>
+        <ul class="no">
+          <li>Not a model picker or Auto router</li>
+          <li>Does not control how the agent speaks</li>
+          <li>Does not sell measure score as invoice proof</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section links">
+      <h2>Links</h2>
+      <ul class="link-row">
+        <li><a href="https://www.npmjs.com/package/@emrahyasinisik/yabgu">npm · @emrahyasinisik/yabgu</a></li>
+        <li><a href="https://github.com/emrahyasinisik/Yabgu/blob/main/docs/matrix.md">File matrix</a></li>
+        <li><a href="https://github.com/emrahyasinisik/Yabgu/blob/main/docs/hosts.md">Host / MCP research</a></li>
+        <li><a href="https://github.com/emrahyasinisik/Yabgu/blob/main/docs/product.md">Product &amp; privacy</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>MIT · <a href="https://github.com/emrahyasinisik/Yabgu">emrahyasinisik/Yabgu</a></p>
+  </footer>
+</body>
+</html>

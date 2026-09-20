@@ -21,7 +21,7 @@ Lower tokens / bills are the intended **mechanism** (less rediscovery, less alwa
 
 1. **Catalog + templates** — which agent reads which native file, and how to write them (product core; finish / update this first).
 2. **MCP (local stdio)** — serves docs/templates; `scan` → `plan` → user approval → `apply`; `measure` for before/after. Derived from the catalog; does not replace native files.
-3. Install using official host schemas in [docs/hosts.md](hosts.md) — per-host snippet (`yabgu_host_setup`). No guessing.
+3. Install using official host schemas in [docs/hosts.md](hosts.md) — CLI `yabgu setup <host>` (or MCP `yabgu_host_setup` after connect). No guessing.
 
 The MCP does not replace native files. It **proposes / writes after approval**; loading every turn is still the host’s job.
 

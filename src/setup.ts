@@ -1,6 +1,29 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import type { HostId } from "./content.js";
 
 export type SetupHostId = HostId | "opencode" | "cline";
+
+export const SETUP_HOST_IDS = [
+  "cursor",
+  "claude",
+  "codex",
+  "copilot",
+  "gemini",
+  "windsurf",
+  "others",
+  "grok",
+  "opencode",
+  "cline",
+] as const satisfies readonly SetupHostId[];
+
+/** Relative project paths for `yabgu setup --write` (cwd = project root). */
+export type SetupWriteTarget = {
+  relativePath: string;
+  body: string;
+  /** If set, --write only prints this instead of writing a file. */
+  printOnly?: string;
+};
 
 /**
  * Vendor-shaped stdio snippets for installing the yabgu MCP.
@@ -149,15 +172,150 @@ startup_timeout_sec = 30
   }
 }
 
-export const SETUP_HOST_IDS = [
-  "cursor",
-  "claude",
-  "codex",
-  "copilot",
-  "gemini",
-  "windsurf",
-  "others",
-  "grok",
-  "opencode",
-  "cline",
-] as const satisfies readonly SetupHostId[];
+/** File body written by `yabgu setup --write` (project-relative). */
+export function hostSetupWriteTarget(host: SetupHostId): SetupWriteTarget | null {
+  switch (host) {
+    case "cursor":
+      return {
+        relativePath: ".cursor/mcp.json",
+        body: `{
+  "mcpServers": {
+    "yabgu": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"]
+    }
+  }
+}
+`,
+      };
+    case "copilot":
+      return {
+        relativePath: ".vscode/mcp.json",
+        body: `{
+  "servers": {
+    "yabgu": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"]
+    }
+  }
+}
+`,
+      };
+    case "codex":
+      return {
+        relativePath: ".codex/config.toml",
+        body: `[mcp_servers.yabgu]
+command = "npx"
+args = ["-y", "@emrahyasinisik/yabgu", "mcp"]
+startup_timeout_sec = 20
+default_tools_approval_mode = "writes"
+`,
+      };
+    case "grok":
+      return {
+        relativePath: ".grok/config.toml",
+        body: `[mcp_servers.yabgu]
+command = "npx"
+args = ["-y", "@emrahyasinisik/yabgu", "mcp"]
+startup_timeout_sec = 30
+`,
+      };
+    case "gemini":
+      return {
+        relativePath: ".gemini/settings.json",
+        body: `{
+  "mcpServers": {
+    "yabgu": {
+      "command": "npx",
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"],
+      "timeout": 30000,
+      "trust": false
+    }
+  }
+}
+`,
+      };
+    case "opencode":
+      return {
+        relativePath: "opencode.json",
+        body: `{
+  "mcp": {
+    "yabgu": {
+      "type": "local",
+      "command": ["npx", "-y", "@emrahyasinisik/yabgu", "mcp"],
+      "enabled": true
+    }
+  }
+}
+`,
+      };
+    case "claude":
+      return {
+        relativePath: "",
+        body: "",
+        printOnly:
+          "Claude Code: run this in the project (does not write a file):\n\n  claude mcp add --transport stdio yabgu -- npx -y @emrahyasinisik/yabgu mcp\n",
+      };
+    case "windsurf":
+    case "cline":
+    case "others":
+      return null;
+    default: {
+      const _exhaustive: never = host;
+      return _exhaustive;
+    }
+  }
+}
+
+export function isSetupHostId(value: string): value is SetupHostId {
+  return (SETUP_HOST_IDS as readonly string[]).includes(value);
+}
+
+export type WriteSetupResult =
+  | { ok: true; path: string; action: "wrote" | "skipped_print_only" }
+  | { ok: false; reason: "unsupported" | "exists" | "print_only"; message: string; path?: string };
+
+/**
+ * Write a project-local MCP config for the host.
+ * Skips non-empty existing files unless overwrite is true.
+ */
+export function writeHostSetup(
+  root: string,
+  host: SetupHostId,
+  options: { overwrite?: boolean } = {},
+): WriteSetupResult {
+  const target = hostSetupWriteTarget(host);
+  if (!target) {
+    return {
+      ok: false,
+      reason: "unsupported",
+      message: `No --write path for host=${host}. Print the snippet with: yabgu setup ${host}`,
+    };
+  }
+  if (target.printOnly) {
+    return {
+      ok: false,
+      reason: "print_only",
+      message: target.printOnly,
+    };
+  }
+
+  const abs = join(root, target.relativePath);
+  if (existsSync(abs)) {
+    const existing = readFileSync(abs, "utf8");
+    if (existing.trim().length > 0 && !options.overwrite) {
+      return {
+        ok: false,
+        reason: "exists",
+        path: abs,
+        message: `Refusing to overwrite non-empty ${target.relativePath}. Pass --overwrite if you asked to replace it.`,
+      };
+    }
+  }
+
+  mkdirSync(dirname(abs), { recursive: true });
+  writeFileSync(abs, target.body, "utf8");
+  return { ok: true, path: abs, action: "wrote" };
+}

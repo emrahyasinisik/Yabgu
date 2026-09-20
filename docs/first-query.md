@@ -1,6 +1,8 @@
 # First query (paste into Cursor, Claude, Codex, Copilot, Gemini, or Grok)
 
-Prefer the MCP prompt `yabgu_setup` when the server is connected. Otherwise paste:
+**Before MCP is connected:** install with the README JSON blocks or `npx @emrahyasinisik/yabgu setup <host> [--write]` — see [README Setup](../README.md#setup) and [hosts.md](hosts.md).
+
+**After the server is connected:** prefer the MCP prompt `yabgu_setup`. Otherwise paste:
 
 ```text
 Analyze this repository and add only the missing instruction files this host needs. Cursor: AGENTS.md (and .mdc rules only for real globs). Claude Code: CLAUDE.md that only imports @AGENTS.md. Gemini CLI: GEMINI.md. Copilot files only if this repo uses Copilot. Do not add GEMINI.md because the Cursor model is Gemini.

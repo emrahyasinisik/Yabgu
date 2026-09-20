@@ -22,6 +22,7 @@
     "measure": "tsx src/cli.ts measure",
     "example:setup": "tsx scripts/example-setup.ts",
     "example:reset": "tsx scripts/example-reset.ts",
+    "assets:gifs": "node scripts/generate-demo-gifs.mjs",
     "prepublishOnly": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
@@ -47,7 +48,7 @@
   "bugs": {
     "url": "https://github.com/emrahyasinisik/Yabgu/issues"
   },
-  "homepage": "https://github.com/emrahyasinisik/Yabgu#readme",
+  "homepage": "https://emrahyasinisik.github.io/Yabgu/",
   "keywords": [
     "agents",
     "mcp",

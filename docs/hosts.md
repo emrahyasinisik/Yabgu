@@ -1,6 +1,6 @@
 # Host research (official docs)
 
-Source: official URL on every row. No guessing. MCP install differs per host — `yabgu_host_setup` emits the snippet.
+Source: official URL on every row. No guessing. MCP install differs per host — print/write with CLI `yabgu setup <host> [--write]`, or MCP tool `yabgu_host_setup` after the server is connected.
 
 Yabgu does not control speaking style. The MCP **proposes** native files for the **current host**; `apply` writes only after approval. Loading every turn remains the host’s job.
 
@@ -22,7 +22,7 @@ Yabgu does not control speaking style. The MCP **proposes** native files for the
 
 ## How MCP connects
 
-Common: **stdio** (local `command` + `args`) everywhere. Snippet generation: `yabgu_host_setup` (per-host json/toml/array). Official Yabgu install is local stdio: process on the user’s machine; the repo never goes to a yabgu server ([privacy](product.md)). Remote **HTTP** is secondary and only the user’s own endpoint. Don’t paste one `mcp.json` onto every host.
+Common: **stdio** (local `command` + `args`) everywhere. Snippet generation: `yabgu setup <host>` (CLI) or `yabgu_host_setup` (MCP). Official Yabgu install is local stdio: process on the user’s machine; the repo never goes to a yabgu server ([privacy](product.md)). Remote **HTTP** is secondary and only the user’s own endpoint. Don’t paste one `mcp.json` onto every host.
 
 ### Cursor
 

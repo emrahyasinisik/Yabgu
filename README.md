@@ -12,6 +12,7 @@
   <a href="package.json"><img alt="Node" src="https://img.shields.io/badge/node-%3E%3D18-1a1a1a?style=flat-square&labelColor=1a1a1a&color=c4a35a" /></a>
   <a href="src/mcp.ts"><img alt="MCP" src="https://img.shields.io/badge/MCP-local%20stdio-1a1a1a?style=flat-square&labelColor=1a1a1a&color=8a9a7b" /></a>
   <a href="docs/product.md"><img alt="Privacy" src="https://img.shields.io/badge/privacy-local%20only-1a1a1a?style=flat-square&labelColor=1a1a1a&color=8a9a7b" /></a>
+  <a href="https://emrahyasinisik.github.io/Yabgu/"><img alt="Site" src="https://img.shields.io/badge/site-GitHub%20Pages-1a1a1a?style=flat-square&labelColor=1a1a1a&color=c4a35a" /></a>
 </p>
 
 ---
@@ -35,9 +36,13 @@ flowchart LR
   C --> I[yabgu_forge_skill]
 ```
 
+<p align="center">
+  <img src="assets/scan-plan-apply.gif" alt="Yabgu flow: scan → plan drafts → approve → apply → measure" width="720" />
+</p>
+
 > Local **stdio** MCP. Repo contents never go to a yabgu server. For Copilot cloud use `YABGU_READ_ONLY=1`.
 
-Project timeline: [docs/history.md](docs/history.md).
+Site: [emrahyasinisik.github.io/Yabgu](https://emrahyasinisik.github.io/Yabgu/) · Timeline: [docs/history.md](docs/history.md).
 
 ## Why accuracy rises (and tokens usually drop)
 
@@ -72,33 +77,80 @@ Already set up (non-empty `AGENTS.md`): do not overwrite — call `yabgu_conflic
 
 ## Setup
 
-### npm (recommended)
+### Add the MCP (≈60 seconds)
 
-Published package: `@emrahyasinisik/yabgu` (bin still `yabgu`). Use the scoped name on the registry:
+You do **not** need the MCP already connected to install it. Paste a config (or run one terminal command), then open your host’s MCP panel.
+
+<p align="center">
+  <img src="assets/mcp-add-cursor.gif" alt="Add Yabgu MCP in Cursor — paste mcp.json, tools appear" width="720" />
+</p>
+
+#### Cursor
+
+1. Create [`.cursor/mcp.json`](.cursor/mcp.json) in the project (or `~/.cursor/mcp.json` for all projects).
+2. Paste:
+
+```json
+{
+  "mcpServers": {
+    "yabgu": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@emrahyasinisik/yabgu", "mcp"]
+    }
+  }
+}
+```
+
+3. Cursor → **Settings → MCP** (or Features → MCP): enable **yabgu**. Tools show after a green connect. Docs: [cursor.com/docs/mcp](https://cursor.com/docs/mcp).
+
+Or from the project root:
+
+```bash
+npx @emrahyasinisik/yabgu setup cursor --write
+```
+
+#### Claude Code
+
+```bash
+claude mcp add --transport stdio yabgu -- npx -y @emrahyasinisik/yabgu mcp
+```
+
+Docs: [code.claude.com/docs/en/mcp](https://code.claude.com/docs/en/mcp).
+
+#### Other hosts
+
+Codex, Copilot, Gemini, Grok, Windsurf, … → [docs/hosts.md](docs/hosts.md) or:
+
+```bash
+npx @emrahyasinisik/yabgu setup <host>           # print snippet
+npx @emrahyasinisik/yabgu setup <host> --write   # write project config when supported
+```
+
+After the server is connected, `yabgu_host_setup` and the `yabgu_setup` prompt work inside the agent. First query: [docs/first-query.md](docs/first-query.md).
+
+### npm package
+
+Published: `@emrahyasinisik/yabgu` (bin `yabgu`). Node.js 18+.
 
 ```bash
 npm install -g @emrahyasinisik/yabgu
+yabgu setup cursor --write
 yabgu mcp
-# or without a global install:
+# helpers:
 npx @emrahyasinisik/yabgu measure .
 npx @emrahyasinisik/yabgu conflicts .
 npx @emrahyasinisik/yabgu forge .
 ```
 
-Requires Node.js 18+. After install, wire the MCP into your host with:
-
-```text
-yabgu_host_setup  →  host=cursor|claude|codex|copilot|…
-```
-
-### 1) Catalog only (no MCP)
+### Catalog only (no MCP)
 
 ```bash
 git clone https://github.com/emrahyasinisik/Yabgu.git
 cp Yabgu/templates/AGENTS.md /path/to/your-project/AGENTS.md
 ```
 
-Or after a global install, copy from the package:
+Or after a global install:
 
 ```bash
 cp "$(npm root -g)/@emrahyasinisik/yabgu/templates/AGENTS.md" /path/to/your-project/AGENTS.md
@@ -109,23 +161,16 @@ cp "$(npm root -g)/@emrahyasinisik/yabgu/templates/AGENTS.md" /path/to/your-proj
 3. Cursor glob rules → [`templates/cursor/`](templates/cursor/)
 4. Copilot → [`templates/copilot/`](templates/copilot/)
 
-### 2) Local MCP from source
+### Local MCP from source
 
 ```bash
 git clone https://github.com/emrahyasinisik/Yabgu.git
 cd Yabgu
 npm install
 npm run build
+npx yabgu setup cursor --write
 npx yabgu mcp
 ```
-
-Host install snippet (Cursor / Claude / Codex / Copilot / …):
-
-```text
-yabgu_host_setup  →  host=cursor|claude|codex|copilot|…
-```
-
-Or see [docs/hosts.md](docs/hosts.md). First query: [docs/first-query.md](docs/first-query.md)
 
 | Tool | Role |
 | --- | --- |
@@ -138,7 +183,7 @@ Or see [docs/hosts.md](docs/hosts.md). First query: [docs/first-query.md](docs/f
 
 `YABGU_READ_ONLY=1` → `yabgu_apply` disabled (for Copilot cloud).
 
-CLI extras: `npx @emrahyasinisik/yabgu measure <path>` · `conflicts` · `forge`
+CLI: `setup` · `measure` · `conflicts` · `forge`
 
 ## Recommended layout
 

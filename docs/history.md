@@ -68,11 +68,17 @@ flowchart TB
 
 ## Suggested GitHub metadata (when opening the repo)
 
-Use these in the GitHub UI (Settings → General) if the CLI is unavailable:
+Use these in the GitHub UI (repo → About gear, or Settings → General):
 
 - **Description:** `Short instruction files for coding agents — catalog, templates, and a local stdio MCP`
-- **Topics:** `mcp` · `agents` · `agents-md` · `cursor` · `claude-code` · `codex` · `github-copilot` · `gemini-cli` · `instruction-files`
-- **Website:** leave empty or point at this README
+- **Topics:** `mcp` · `agents` · `agents-md` · `cursor` · `claude-code` · `codex` · `github-copilot` · `gemini-cli` · `grok` · `instruction-files`
+- **Website:** `https://emrahyasinisik.github.io/Yabgu/` (GitHub Pages from `site/`)
+
+## Onboarding UX (post-release)
+
+- README leads with copy-paste Cursor/Claude MCP install (no chicken-egg via `yabgu_host_setup`).
+- CLI: `yabgu setup <host> [--write] [--overwrite]` writes project MCP configs when supported.
+- Promo site: static `site/` on GitHub Pages; demo GIFs under `assets/`.
 
 ## Notes for consumers
 

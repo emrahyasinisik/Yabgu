@@ -14,6 +14,7 @@ npm run build
 npm test
 npm run typecheck
 npx yabgu mcp
+npx yabgu setup <host> [--write] [--overwrite]
 npx yabgu measure <path>
 npx yabgu conflicts <path>
 npx yabgu forge <path>
@@ -23,6 +24,7 @@ npx yabgu forge <path>
 ## Layout
 
 - `README.md` — purpose, file matrix, how to copy templates
+- `site/` — static promo landing (GitHub Pages)
 - `docs/` — product rule, writing guide, host/MCP research, comparison matrix, measure protocol, history
 - `tools/` — per-product file lists
 - `templates/` — copy-paste starter files
